@@ -7,4 +7,8 @@ public class EquipementOffensif {
             this.gearType="Sort";
         }
     }
+
+    public String getGearType() {
+        return gearType;
+    }
 }

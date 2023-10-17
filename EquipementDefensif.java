@@ -7,4 +7,8 @@ public class EquipementDefensif {
             this.gearType="Philtre";
         }
     }
+
+    public String getGearType() {
+        return gearType;
+    }
 }
