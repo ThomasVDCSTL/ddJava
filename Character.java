@@ -1,10 +1,12 @@
 public class Character {
-    String name;
-    int hp;
-    int attack;
-    String classe;
-    EquipementOffensif atkGear;
-    EquipementDefensif defGear;
+    /* Classe de personnage contenant les attributs nécessaires
+    ainsi que les méthodes permettant de les utiliser */
+    private String name;
+    private int hp;
+    private int attack;
+    private String classe;
+    private EquipementOffensif atkGear;
+    private EquipementDefensif defGear;
 
     public Character(String name, String classe,int hp, int atk){
         this.name=name;

@@ -1,6 +1,6 @@
 public class Tile {
-    int id;
-    boolean playerLocation;
+    private int id;
+    private boolean playerLocation;
     public void Tile(){
         this.id=1;
     }

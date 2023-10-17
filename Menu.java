@@ -2,8 +2,9 @@ import java.util.Scanner;
 import java.util.ArrayList;
 
 public class Menu {
-    ArrayList<Character> players = new ArrayList<Character>();
-    Game partie;
+    /* Classe menu servant à initialiser la liste des joueurs et la partie à jouer */
+    private ArrayList<Character> players = new ArrayList<Character>();
+    private Game partie;
     public ArrayList<Character> initPlayers(){
         Scanner initGame = new Scanner(System.in);
         String check ="y";
@@ -62,10 +63,7 @@ public class Menu {
         return this.players;
     }
     public void startGame(){
-        this.partie = new Game();
-        ArrayList<Character> joueurs =this.initPlayers();
-        ArrayList<Tile> plateau=partie.getPlateau();
-        plateau.get(0).setPlayerLocation(true);
+        this.partie = new Game(this.initPlayers());
     }
     public static void leaveGame(){
 
