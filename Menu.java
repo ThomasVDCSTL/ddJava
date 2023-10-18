@@ -20,8 +20,18 @@ public class Menu {
         while (check.equals("y")) {
             System.out.println("Nom du personnage :");
             String nom = initGame.next();
-            System.out.println("Classe : [Guerrier/Magicien]");
-            String classe=initGame.next();
+            String classe ="";
+            while (!classe.equals("Guerrier")&&!classe.equals("Magicien")){
+                System.out.println("Voulez vous être un guerrier ou un magicien ? [g/m]");
+                classe=initGame.next();
+                if (classe.equals("g")){
+                    classe="Guerrier";
+                } else if (classe.equals("m")) {
+                    classe="Magicien";
+                }else{
+                    System.out.println("Je n'ai pas compris..");
+                }
+            }
             System.out.println("Points de vie :");
             int pv = initGame.nextInt();
             System.out.println("Attaque :");
@@ -41,7 +51,19 @@ public class Menu {
                     personnage.setName(initGame.next());
                 } else if (choix==2) {
                     System.out.println("Nouvelle classe :");
-                    personnage.setClasse(initGame.next());
+                    classe="";
+                    while (!classe.equals("Guerrier")&&!classe.equals("Magicien")){
+                        System.out.println("Voulez vous être un guerrier ou un magicien ? [g/m]");
+                        classe=initGame.next();
+                        if (classe.equals("g")){
+                            classe="Guerrier";
+                        } else if (classe.equals("m")) {
+                            classe="Magicien";
+                        }else{
+                            System.out.println("Je n'ai pas compris..");
+                        }
+                    }
+                    personnage.setClasse(classe);
                 } else if (choix==3) {
                     System.out.println("Nouveaux Points de vie :");
                     personnage.setHp(initGame.nextInt());
