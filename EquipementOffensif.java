@@ -23,9 +23,9 @@ public class EquipementOffensif {
         this.name="Rine";
     }
 
-    /*---------------------------Setters/Getters---------------------------*/
+    /*---------------------------Méthodes---------------------------*/
 
-    public void getWeapon1(){
+    public void setWeapon1(){
         if (this.gearType.equals("Sort")){
             this.name="Eclair";
             this.value=2;
@@ -34,7 +34,7 @@ public class EquipementOffensif {
             this.value=3;
         }
     }
-    public void getWeapon2(){
+    public void setWeapon2(){
         if (this.gearType.equals("Arme")){
             this.name="Epée";
             this.value=5;

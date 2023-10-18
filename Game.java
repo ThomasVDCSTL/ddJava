@@ -14,9 +14,14 @@ public class Game {
     /*---------------------------Constructeur---------------------------*/
     public Game(ArrayList<Character> players){
         this.initPlateau();
-        Scanner jeu= new Scanner(System.in);
         this.joueurs = players;
         this.playerLocation=1;
+    }
+
+    /*---------------------------Méthodes---------------------------*/
+
+    public void playGame(){
+        Scanner jeu= new Scanner(System.in);
         while (this.playerLocation<64&&this.joueurs.get(0).getHp()>0) {
             playerTurn(jeu);
         }
@@ -27,13 +32,9 @@ public class Game {
         }
         System.out.println("On recommence ? [y/n]");
     }
-
-    /*---------------------------Méthodes---------------------------*/
     public void initPlateau(){
         for (int i = 0; i < 64; i++) {
-            this.plateau.add(new Tile());
-            this.plateau.get(i).setId(i+1);
-            this.plateau.get(i).setEvent();
+            this.plateau.add(new Tile(i+1));
         }
     }
     public void deplacement (int jet){
@@ -50,7 +51,7 @@ public class Game {
             this.deplacement(dice);
             System.out.println("Position joueur : " + this.playerLocation);
             if (playerLocation<=64) {
-                String event = this.plateau.get(this.playerLocation).triggerEvent();
+                String event = this.plateau.get(this.playerLocation-1).triggerEvent();
                 System.out.println("Evennement déclenché : " + event);
                 if (event.equals("bagarre")) {
                     alive = this.combat(player);
@@ -99,14 +100,14 @@ public class Game {
         int giftType=destin.ints(1, 5).findFirst().getAsInt();
         if (giftType==1){
             if (player.getAtkGear().getName().equals("Rine")){
-                player.getAtkGear().getWeapon1();
+                player.getAtkGear().setWeapon1();
                 System.out.println("Vous avez trouvé une arme sympa, vous gagnez "+player.getAtkGear().getValue()+" points d'attaque !");
             } else {
                 System.out.println("Vous avez trouvé une arme mais elle n'est pas mieux que celle que vous possédez déjà... vous la laissez ici!");
             }
         } else if (giftType==2) {
             if (player.getAtkGear().getName().equals("Rine")){
-                player.getAtkGear().getWeapon2();
+                player.getAtkGear().setWeapon2();
                 System.out.println("Vous avez trouvé une arme de malade, vous gagnez "+player.getAtkGear().getValue()+" points d'attaque !");;
             } else {
                 System.out.println("Vous avez trouvé une arme mais elle n'est pas mieux que celle que vous possédez déjà... vous la laissez ici!");

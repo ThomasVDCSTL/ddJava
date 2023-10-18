@@ -74,6 +74,7 @@ public class Menu {
     }
     public void startGame(){
         this.partie = new Game(this.initPlayers());
+        this.partie.playGame();
     }
     public static void leaveGame(){
 

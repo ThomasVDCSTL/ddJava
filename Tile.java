@@ -8,8 +8,9 @@ public class Tile {
 
 
     /*---------------------------Constructeur---------------------------*/
-    public void Tile(){
-
+    public Tile(int ID){
+        this.id=ID;
+        this.setEvent();
     }
 
 
