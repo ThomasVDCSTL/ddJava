@@ -21,17 +21,7 @@ public class Menu {
             System.out.println("Nom du personnage :");
             String nom = initGame.next();
             String classe ="";
-            while (!classe.equals("Guerrier")&&!classe.equals("Magicien")){
-                System.out.println("Voulez vous être un guerrier ou un magicien ? [g/m]");
-                classe=initGame.next();
-                if (classe.equals("g")){
-                    classe="Guerrier";
-                } else if (classe.equals("m")) {
-                    classe="Magicien";
-                }else{
-                    System.out.println("Je n'ai pas compris..");
-                }
-            }
+            classe=this.classChoice(classe, initGame);
             System.out.println("Points de vie :");
             int pv = initGame.nextInt();
             System.out.println("Attaque :");
@@ -52,17 +42,7 @@ public class Menu {
                 } else if (choix==2) {
                     System.out.println("Nouvelle classe :");
                     classe="";
-                    while (!classe.equals("Guerrier")&&!classe.equals("Magicien")){
-                        System.out.println("Voulez vous être un guerrier ou un magicien ? [g/m]");
-                        classe=initGame.next();
-                        if (classe.equals("g")){
-                            classe="Guerrier";
-                        } else if (classe.equals("m")) {
-                            classe="Magicien";
-                        }else{
-                            System.out.println("Je n'ai pas compris..");
-                        }
-                    }
+                    classe=this.classChoice(classe, initGame);
                     personnage.setClasse(classe);
                 } else if (choix==3) {
                     System.out.println("Nouveaux Points de vie :");
@@ -97,5 +77,19 @@ public class Menu {
     }
     public static void leaveGame(){
 
+    }
+    public String classChoice(String classe,Scanner initGame ){
+        while (!classe.equals("Guerrier")&&!classe.equals("Magicien")){
+            System.out.println("Voulez vous être un guerrier ou un magicien ? [g/m]");
+            classe=initGame.next();
+            if (classe.equals("g")){
+                classe="Guerrier";
+            } else if (classe.equals("m")) {
+                classe="Magicien";
+            }else{
+                System.out.println("Je n'ai pas compris..");
+            }
+        }
+        return classe;
     }
 }
