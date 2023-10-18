@@ -20,7 +20,7 @@ public class Game {
 
     /*---------------------------Méthodes---------------------------*/
 
-    public void playGame(){
+    public String playGame(){
         Scanner jeu= new Scanner(System.in);
         while (this.playerLocation<64&&this.joueurs.get(0).getHp()>0) {
             playerTurn(jeu);
@@ -31,6 +31,7 @@ public class Game {
             System.out.print("GG WP !");
         }
         System.out.println("On recommence ? [y/n]");
+        return jeu.next();
     }
     public void initPlateau(){
         for (int i = 0; i < 64; i++) {
@@ -50,7 +51,7 @@ public class Game {
             int dice=destin.ints(1, 7).findFirst().getAsInt();
             this.deplacement(dice);
             System.out.println("Position joueur : " + this.playerLocation);
-            if (playerLocation<=64) {
+            if (playerLocation<=64&&playerLocation>=0) {
                 String event = this.plateau.get(this.playerLocation-1).triggerEvent();
                 System.out.println("Evennement déclenché : " + event);
                 if (event.equals("bagarre")) {
@@ -61,6 +62,14 @@ public class Game {
                 if (alive) {
                     System.out.println("Vous continuez votre aventure");
                 }
+            } else {
+                try {
+                    if (this.playerLocation>64||this.playerLocation<0) {
+                        throw new PersonnageHorsPlateauException();
+                    }
+                    String event = this.plateau.get(this.playerLocation-1).triggerEvent();
+                }catch (PersonnageHorsPlateauException e){ System.out.println("j'ai choppé l'erreur");}
+
             }
         }
     }
@@ -87,11 +96,11 @@ public class Game {
         destin = new Random();
         int ennemyType=destin.ints(1, 4).findFirst().getAsInt();
         if (ennemyType==1){
-            ennemy= new Character("Sorcier","ennemy",9,2);
+            ennemy= new Character("Sorcier",9,2);
         } else if (ennemyType==3) {
-            ennemy= new Character("Dragon","ennemy",15,4);
+            ennemy= new Character("Dragon",15,4);
         }else {
-            ennemy= new Character("Gobelin","ennemy",6,1);
+            ennemy= new Character("Gobelin",6,1);
         }
         return ennemy;
     }
@@ -100,14 +109,14 @@ public class Game {
         int giftType=destin.ints(1, 5).findFirst().getAsInt();
         if (giftType==1){
             if (player.getAtkGear().getName().equals("Rine")){
-                player.getAtkGear().setWeapon1();
+                player.setAtkGear(this.giveWeapon1(player));
                 System.out.println("Vous avez trouvé une arme sympa, vous gagnez "+player.getAtkGear().getValue()+" points d'attaque !");
             } else {
                 System.out.println("Vous avez trouvé une arme mais elle n'est pas mieux que celle que vous possédez déjà... vous la laissez ici!");
             }
         } else if (giftType==2) {
             if (player.getAtkGear().getName().equals("Rine")){
-                player.getAtkGear().setWeapon2();
+                player.setAtkGear(this.giveWeapon2(player));
                 System.out.println("Vous avez trouvé une arme de malade, vous gagnez "+player.getAtkGear().getValue()+" points d'attaque !");;
             } else {
                 System.out.println("Vous avez trouvé une arme mais elle n'est pas mieux que celle que vous possédez déjà... vous la laissez ici!");
@@ -118,6 +127,20 @@ public class Game {
         }else if (giftType==4) {
             System.out.println("Vous avez trouvé une grande potion, vous gagnez 5 PV");
             player.heals(4);
+        }
+    }
+    public EquipementOffensif giveWeapon1(Character player){
+        if (player.getAtkGear().getGearType().equals("arme")){
+            return new Arme("Massue",3);
+        } else {
+            return new Sort("Eclair",2);
+        }
+    }
+    public EquipementOffensif giveWeapon2(Character player){
+        if (player.getAtkGear().getGearType().equals("arme")){
+            return new Arme("Epée",5);
+        } else {
+            return new Sort("Boule de feu",7);
         }
     }
     public ArrayList<Tile> getPlateau() {
