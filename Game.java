@@ -21,9 +21,9 @@ public class Game {
             playerTurn(jeu);
         }
         if (this.playerLocation<64) {
-            System.out.print("GG WP !");
-        } else if (this.joueurs.get(0).getHp()>0) {
             System.out.print("T'as perdu gros bouffon !");
+        } else if (this.joueurs.get(0).getHp()>0) {
+            System.out.print("GG WP !");
         }
         System.out.println("On recommence ? [y/n]");
     }
@@ -39,9 +39,6 @@ public class Game {
     public void deplacement (int jet){
         this.playerLocation+=jet;
     }
-    public ArrayList<Tile> getPlateau() {
-        return plateau;
-    }
     public void playerTurn(Scanner jeu){        /* Possibilité de rajouter un paramètre joueur pour les faire bouger individuellement */
         Character player=this.joueurs.get(0);
         System.out.println("Tapez 'lancer' pour lancer le dé");
@@ -51,16 +48,18 @@ public class Game {
             destin = new Random();
             int dice=destin.ints(1, 7).findFirst().getAsInt();
             this.deplacement(dice);
-            System.out.println("Position joueur : "+this.playerLocation);
-            String event=this.plateau.get(this.playerLocation+1).triggerEvent();
-            System.out.println("Evennement déclenché : "+event);
-            if (event.equals("bagarre")){
-               alive=this.combat(player);
-            } else if (event.equals("cadeau")) {
-                this.getGift(player);
-            }
-            if (alive){
-                System.out.println("Vous continuez votre aventure");
+            System.out.println("Position joueur : " + this.playerLocation);
+            if (playerLocation<=64) {
+                String event = this.plateau.get(this.playerLocation + 1).triggerEvent();
+                System.out.println("Evennement déclenché : " + event);
+                if (event.equals("bagarre")) {
+                    alive = this.combat(player);
+                } else if (event.equals("cadeau")) {
+                    this.getGift(player);
+                }
+                if (alive) {
+                    System.out.println("Vous continuez votre aventure");
+                }
             }
         }
     }
@@ -119,5 +118,8 @@ public class Game {
             System.out.println("Vous avez trouvé une grande potion, vous gagnez 5 PV");
             player.heals(4);
         }
+    }
+    public ArrayList<Tile> getPlateau() {
+        return plateau;
     }
 }
