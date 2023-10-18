@@ -3,8 +3,16 @@ import java.util.ArrayList;
 
 public class Menu {
     /* Classe menu servant à initialiser la liste des joueurs et la partie à jouer */
+
+
+
+    /*---------------------------Attributs---------------------------*/
     private ArrayList<Character> players = new ArrayList<Character>();
     private Game partie;
+
+
+
+    /*---------------------------Méthodes---------------------------*/
     public ArrayList<Character> initPlayers(){
         Scanner initGame = new Scanner(System.in);
         String check ="y";
