@@ -50,7 +50,7 @@ public class Game {
             this.deplacement(dice);
             System.out.println("Position joueur : " + this.playerLocation);
             if (playerLocation<=64) {
-                String event = this.plateau.get(this.playerLocation + 1).triggerEvent();
+                String event = this.plateau.get(this.playerLocation).triggerEvent();
                 System.out.println("Evennement déclenché : " + event);
                 if (event.equals("bagarre")) {
                     alive = this.combat(player);
