@@ -14,11 +14,35 @@ public class EquipementOffensif {
     public EquipementOffensif(String classe){
         if (classe.equals("Guerrier")){
             this.gearType="Arme";
-        }else {
+        }else if (classe.equals("Magicien")){
             this.gearType="Sort";
+        }else {
+            this.gearType="Rine";
         }
+        this.value=0;
+        this.name="Rine";
     }
 
+    /*---------------------------Setters/Getters---------------------------*/
+
+    public void getWeapon1(){
+        if (this.gearType.equals("Sort")){
+            this.name="Eclair";
+            this.value=2;
+        } else if (this.gearType.equals("Arme")) {
+            this.name="Massue";
+            this.value=3;
+        }
+    }
+    public void getWeapon2(){
+        if (this.gearType.equals("Arme")){
+            this.name="Epée";
+            this.value=5;
+        } else if (this.gearType.equals("Sort")) {
+            this.name="Boule de feu";
+            this.value=7;
+        }
+    }
 
     /*---------------------------Setters/Getters---------------------------*/
 

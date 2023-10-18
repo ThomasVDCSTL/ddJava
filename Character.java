@@ -23,6 +23,18 @@ public class Character {
         this.defGear=new EquipementDefensif(classe);
     }
 
+    /*---------------------------Méthodes---------------------------*/
+
+    public void getsHit(Character opponent){
+        this.hp-=(opponent.getAttack()-this.defGear.getValue());
+    }
+
+    public void heals(int val){
+        this.hp+=val;
+    }
+
+
+
     /*---------------------------Setters/Getters---------------------------*/
 
     public String getName() {
@@ -34,7 +46,7 @@ public class Character {
     }
 
     public int getAttack() {
-        return attack;
+        return attack+this.atkGear.getValue();
     }
 
     public EquipementOffensif getAtkGear() {

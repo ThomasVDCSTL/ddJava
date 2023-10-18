@@ -15,9 +15,13 @@ public class EquipementDefensif {
     public EquipementDefensif(String classe){
         if (classe.equals("Guerrier")){
             this.gearType="Bouclier";
-        }else {
+        }else if (classe.equals("Magicien")){
             this.gearType="Philtre";
+        }else {
+            this.gearType="Rine";
         }
+        this.value=0;
+        this.name="Rine";
     }
 
 
