@@ -1,4 +1,10 @@
-public class Enemy extends Character implements Tile{
+package Personnages;
+
+import Defensif.Bouclier;
+import Offensif.Arme;
+import Tiles.Tile;
+
+public class Enemy extends Character implements Tile {
 
 
     /*---------------------------Attributs---------------------------*/
@@ -14,15 +20,9 @@ public class Enemy extends Character implements Tile{
     }
 
     /*---------------------------Méthodes---------------------------*/
-    public void giveWeapon1(){
-        this.setAtkGear(new Sort("Rine",0));
-    }
-    public void giveWeapon2(){
-        this.setAtkGear(new Sort("Rine",0));
-    }
-    public String triggerEvent() {
-        return "bagarre";
-    }
+
+
+
     /*---------------------------Setters/Getters---------------------------*/
 
     public int getId() {

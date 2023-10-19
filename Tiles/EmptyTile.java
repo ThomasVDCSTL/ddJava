@@ -1,3 +1,5 @@
+package Tiles;
+
 public class EmptyTile implements Tile{
 
 
@@ -11,9 +13,7 @@ public class EmptyTile implements Tile{
     }
 
     /*---------------------------Méthodes---------------------------*/
-    public String triggerEvent() {
-        return "Rine";
-    }
+
     /*---------------------------Setters/Getters---------------------------*/
 
     public int getId() {

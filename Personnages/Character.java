@@ -1,3 +1,9 @@
+package Personnages;
+
+import Defensif.EquipementDefensif;
+import Offensif.EquipementOffensif;
+import Tiles.Potion;
+
 public abstract class Character {
     /* Classe de personnage contenant les attributs nécessaires
     ainsi que les méthodes permettant de les utiliser */
@@ -25,19 +31,23 @@ public abstract class Character {
         this.hp-=(opponent.getAttack());
     }
 
-    public void heals(int val){
-        this.hp+=val;
+    public void heals(Potion potion){
+        this.hp+=potion.getValue();
         if (this.hp>this.maxHp){
             this.hp=this.maxHp;
         }
+    }
+    public boolean canEquip(EquipementOffensif stuff){
+        EquipementOffensif comparatif =this.getAtkGear();
+        if (comparatif.getGearType().equals(stuff.getGearType())&&stuff.getValue()>comparatif.getValue()){
+            return true;
+        }
+        return false;
     }
 
     public String toString(){
         return "Personnage : "+name+", PV : "+hp+", Attaque : "+attack;
     }
-    public abstract void giveWeapon1();
-    public abstract void giveWeapon2();
-
 
 
     /*---------------------------Setters/Getters---------------------------*/

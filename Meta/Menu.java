@@ -1,3 +1,10 @@
+package Meta;
+
+import Exceptions.LeavingGame;
+import Personnages.Character;
+import Personnages.Guerrier;
+import Personnages.Magicien;
+
 import java.util.Scanner;
 import java.util.ArrayList;
 
@@ -27,7 +34,7 @@ public class Menu {
         initGame = new Scanner(System.in);
         int choice =0;
         while(choice!=2&&choice!=3) {
-            System.out.println("-----Menu du jeu-----");
+            System.out.println("-----Meta.Menu du jeu-----");
             System.out.println("1_ Options");
             System.out.println("2_ Reprendre");
             System.out.println("3_ Quitter la partie");
@@ -57,12 +64,12 @@ public class Menu {
     public ArrayList<Character> initPlayers(){
 
         String check ="y";
+        String classe ="";
         int index=0;
         while (check.equals("y")) {
             Character personnage;
             System.out.println("Nom du personnage :");
             String nom = initGame.next();
-            String classe ="";
             classe=this.classChoice(classe, initGame);
             System.out.println("1_Nom :"+nom);
             System.out.println("2_Classe :"+classe);
@@ -105,7 +112,7 @@ public class Menu {
         }
         return this.players;
     }
-    public void startGame()throws LeavingGame{
+    public void startGame() {
         String jouer="y";
         this.initPlayers();
         while (jouer.equals("y")) {
@@ -115,7 +122,8 @@ public class Menu {
             }catch (LeavingGame e){
                 partie=null;
                 System.gc();
-                throw e;
+                System.out.println("On recommence ? [y/n]");
+                jouer=initGame.next();
             }
         }
     }

@@ -1,3 +1,5 @@
+package Tiles;
+
 public class Potion implements Tile{
 
 
@@ -8,18 +10,11 @@ public class Potion implements Tile{
     /*---------------------------Constructeur---------------------------*/
     public Potion(int Id){
         this.id=Id;
-        if (Id%2==1){
-            this.value=2;
-        }else{
-            this.value=5;
-        }
     }
 
 
     /*---------------------------Méthodes---------------------------*/
-    public String triggerEvent() {
-        return "heal";
-    }
+
 
     /*---------------------------Setters/Getters---------------------------*/
 

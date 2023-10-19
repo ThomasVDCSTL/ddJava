@@ -1,23 +1,16 @@
-public class Sort extends EquipementOffensif{
+package Defensif;
+
+public class Bouclier extends EquipementDefensif {
 
     /*---------------------------Attributs---------------------------*/
 
 
     /*---------------------------Constructeur---------------------------*/
-    public Sort(){
-        this.setGearType("Sort");
+    public Bouclier(){
+        this.setGearType("Defensif.Bouclier");
         this.setValue(0);
         this.setName("Rine");
     }
-
-    public Sort(String nom,int dmg){
-        this.setGearType("Sort");
-        this.setValue(dmg);
-        this.setName(nom);
-    }
-
-
-
     /*---------------------------Méthodes---------------------------*/
 
     /*---------------------------Setters/Getters---------------------------*/

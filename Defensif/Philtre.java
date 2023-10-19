@@ -1,14 +1,19 @@
-public class Bouclier extends EquipementDefensif{
+package Defensif;
+
+import Defensif.EquipementDefensif;
+
+public class Philtre extends EquipementDefensif {
 
     /*---------------------------Attributs---------------------------*/
 
 
     /*---------------------------Constructeur---------------------------*/
-    public Bouclier(){
-        this.setGearType("Bouclier");
+    public Philtre(){
+        this.setGearType("Defensif.Philtre");
         this.setValue(0);
         this.setName("Rine");
     }
+
     /*---------------------------Méthodes---------------------------*/
 
     /*---------------------------Setters/Getters---------------------------*/

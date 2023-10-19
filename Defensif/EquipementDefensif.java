@@ -1,4 +1,6 @@
-public abstract class EquipementOffensif {
+package Defensif;
+
+public abstract class EquipementDefensif {
     /* Pas grand chose dans cette classe pour l'instant,
     seulement le type d'équipement dont il s'agit
     en fonction de la classe du personnage qui la possede */
@@ -10,10 +12,8 @@ public abstract class EquipementOffensif {
     private int value;
 
 
+
     /*---------------------------Constructeur---------------------------*/
-
-
-    /*---------------------------Méthodes---------------------------*/
 
 
 
@@ -22,6 +22,7 @@ public abstract class EquipementOffensif {
     public String getGearType() {
         return gearType;
     }
+
 
     public void setGearType(String gearType) {
         this.gearType = gearType;

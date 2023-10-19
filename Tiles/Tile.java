@@ -1,3 +1,5 @@
+package Tiles;
+
 import java.util.Random;
 public interface Tile {
 
@@ -8,7 +10,7 @@ public interface Tile {
 
 
     /*---------------------------Méthodes---------------------------*/
-    public String triggerEvent();
+
 
 //    /*---------------------------Setters/Getters---------------------------*/
 
