@@ -8,13 +8,54 @@ public class Menu {
 
     /*---------------------------Attributs---------------------------*/
     private ArrayList<Character> players = new ArrayList<Character>();
-    private Game partie;
+    Scanner initGame;
+    private String state;
 
+
+    /*---------------------------Constructeur---------------------------*/
+    public Menu(){
+        initGame = new Scanner(System.in);
+        System.out.println("Bienvenu dans cette version de custom de Donjons et Dragons !");
+        System.out.println("La partie va bientôt commencer..");
+        System.out.println("Mais avant, voici quelques explications pour accéder au menu du jeu :");
+        System.out.println("A tout moment de la partie vous pouvez taper 'menu' pour afficher le menu");
+        System.out.println("Il vous suffira après de suivre les instructions");
+        System.out.println("Bon jeu a vous ! [Dis 'merci' !]");
+        String demarrer = initGame.next();
+    }
+    public Menu(Game partie){
+        initGame = new Scanner(System.in);
+        int choice =0;
+        while(choice!=2&&choice!=3) {
+            System.out.println("-----Menu du jeu-----");
+            System.out.println("1_ Options");
+            System.out.println("2_ Reprendre");
+            System.out.println("3_ Quitter la partie");
+
+            choice = initGame.nextInt();
+            if (choice == 1) {
+                this.displayOptions();
+            } else if (choice==2){
+                System.out.println("Reprise de la partie");
+            } else if (choice == 3) {
+                this.leaveGame(partie);
+            }else {
+                System.out.println("essaie pas de me faire ...");
+            }
+        }
+    }
 
 
     /*---------------------------Méthodes---------------------------*/
+    public void displayOptions(){
+        System.out.println("pas d'options pour le moment....[ok]");
+        initGame.next();
+    }
+    public void leaveGame(Game partie){
+        state = "leave";
+    }
     public ArrayList<Character> initPlayers(){
-        Scanner initGame = new Scanner(System.in);
+
         String check ="y";
         int index=0;
         while (check.equals("y")) {
@@ -64,16 +105,19 @@ public class Menu {
         }
         return this.players;
     }
-    public void startGame(){
+    public void startGame()throws LeavingGame{
         String jouer="y";
         this.initPlayers();
         while (jouer.equals("y")) {
-            this.partie = new Game(this.players);
-            jouer=this.partie.playGame();
+            Game partie = new Game(this.players);
+            try {
+                jouer = partie.playGame();
+            }catch (LeavingGame e){
+                partie=null;
+                System.gc();
+                throw e;
+            }
         }
-    }
-    public static void leaveGame(){
-
     }
     public String classChoice(String classe,Scanner initGame ){
         while (!classe.equals("Guerrier")&&!classe.equals("Magicien")){
@@ -88,5 +132,13 @@ public class Menu {
             }
         }
         return classe;
+    }
+
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
     }
 }

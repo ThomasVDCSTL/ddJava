@@ -5,7 +5,9 @@ public class Philtre extends EquipementDefensif{
 
     /*---------------------------Constructeur---------------------------*/
     public Philtre(){
-        super("Magicien");
+        this.setGearType("Philtre");
+        this.setValue(0);
+        this.setName("Rine");
     }
 
     /*---------------------------Méthodes---------------------------*/

@@ -1,4 +1,4 @@
-public class EquipementDefensif {
+public abstract class EquipementDefensif {
     /* Pas grand chose dans cette classe pour l'instant,
     seulement le type d'équipement dont il s'agit
     en fonction de la classe du personnage qui la possede */
@@ -12,17 +12,7 @@ public class EquipementDefensif {
 
 
     /*---------------------------Constructeur---------------------------*/
-    public EquipementDefensif(String classe){
-        if (classe.equals("Guerrier")){
-            this.gearType="Bouclier";
-        }else if (classe.equals("Magicien")){
-            this.gearType="Philtre";
-        }else {
-            this.gearType="Rine";
-        }
-        this.value=0;
-        this.name="Rine";
-    }
+
 
 
     /*---------------------------Setters/Getters---------------------------*/

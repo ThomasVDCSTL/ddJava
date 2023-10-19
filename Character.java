@@ -1,4 +1,4 @@
-public class Character {
+public abstract class Character {
     /* Classe de personnage contenant les attributs nécessaires
     ainsi que les méthodes permettant de les utiliser */
 
@@ -7,7 +7,9 @@ public class Character {
     /*---------------------------Attributs---------------------------*/
     private String name;
     private int hp;
+    private int maxHp;
     private int attack;
+    private int maxAttack;
     private EquipementOffensif atkGear;
     private EquipementDefensif defGear;
 
@@ -15,11 +17,7 @@ public class Character {
 
     /*---------------------------Constructeur---------------------------*/
 
-    public Character(String name,int hp, int atk){
-        this.name=name;
-        this.hp=hp;
-        this.attack=atk;
-    }
+
 
     /*---------------------------Méthodes---------------------------*/
 
@@ -29,6 +27,13 @@ public class Character {
 
     public void heals(int val){
         this.hp+=val;
+        if (this.hp>this.maxHp){
+            this.hp=this.maxHp;
+        }
+    }
+
+    public String toString(){
+        return "Personnage : "+name+", PV : "+hp+", Attaque : "+attack;
     }
 
 
@@ -74,5 +79,21 @@ public class Character {
 
     public EquipementDefensif getDefGear() {
         return defGear;
+    }
+
+    public int getMaxHp() {
+        return maxHp;
+    }
+
+    public void setMaxHp(int maxHp) {
+        this.maxHp = maxHp;
+    }
+
+    public int getMaxAttack() {
+        return maxAttack;
+    }
+
+    public void setMaxAttack(int maxAttack) {
+        this.maxAttack = maxAttack;
     }
 }

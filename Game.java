@@ -8,6 +8,7 @@ public class Game {
     private ArrayList<Tile> plateau =new ArrayList<Tile>();
     Random destin;
     ArrayList<Character> joueurs;
+    Menu menu;
 
 
 
@@ -20,10 +21,18 @@ public class Game {
 
     /*---------------------------Méthodes---------------------------*/
 
-    public String playGame(){
+
+
+
+    public String playGame()throws LeavingGame{
         Scanner jeu= new Scanner(System.in);
         while (this.playerLocation<64&&this.joueurs.get(0).getHp()>0) {
-            playerTurn(jeu);
+            try{
+                playerTurn(jeu);
+            }catch (LeavingGame e){
+
+                throw e;
+            }
         }
         if (this.playerLocation<64) {
             System.out.print("T'as perdu gros bouffon !");
@@ -41,10 +50,17 @@ public class Game {
     public void deplacement (int jet){
         this.playerLocation+=jet;
     }
-    public void playerTurn(Scanner jeu){        /* Possibilité de rajouter un paramètre joueur pour les faire bouger individuellement */
+    public void playerTurn(Scanner jeu)throws LeavingGame{        /* Possibilité de rajouter un paramètre joueur pour les faire bouger individuellement */
         Character player=this.joueurs.get(0);
         System.out.println("Tapez 'lancer' pour lancer le dé");
         String choix= jeu.next();
+        if (choix.equals("menu")){
+            menu =new Menu(this);
+            if (menu.getState().equals("leave")){
+                throw new LeavingGame();
+            }
+            menu=null;
+        }
         boolean alive = true;
         if (choix.equals("lancer")){
             destin = new Random();
@@ -64,7 +80,7 @@ public class Game {
                 }
             } else {
                 try {
-                    if (this.playerLocation>64||this.playerLocation<0) {
+                    if (this.playerLocation>64||this.playerLocation<0) {            /* refaire tout ça */
                         throw new PersonnageHorsPlateauException();
                     }
                     String event = this.plateau.get(this.playerLocation-1).triggerEvent();
@@ -96,11 +112,11 @@ public class Game {
         destin = new Random();
         int ennemyType=destin.ints(1, 4).findFirst().getAsInt();
         if (ennemyType==1){
-            ennemy= new Character("Sorcier",9,2);
+            ennemy= new Guerrier("Sorcier");
         } else if (ennemyType==3) {
-            ennemy= new Character("Dragon",15,4);
+            ennemy= new Guerrier("Dragon");
         }else {
-            ennemy= new Character("Gobelin",6,1);
+            ennemy= new Guerrier("Gobelin");
         }
         return ennemy;
     }
@@ -122,11 +138,11 @@ public class Game {
                 System.out.println("Vous avez trouvé une arme mais elle n'est pas mieux que celle que vous possédez déjà... vous la laissez ici!");
             }
         }else if (giftType==3) {
-            System.out.println("Vous avez trouvé une potion standard, vous gagnez 2 PV");
             player.heals(2);
+            System.out.println("Vous avez trouvé une POTION STANDARD, votre nouveau montant de PV est : "+player.getHp());
         }else if (giftType==4) {
-            System.out.println("Vous avez trouvé une grande potion, vous gagnez 5 PV");
-            player.heals(4);
+            player.heals(5);
+            System.out.println("Vous avez trouvé une GRANDE POTION, votre nouveau montant de PV est : "+player.getHp());
         }
     }
     public EquipementOffensif giveWeapon1(Character player){

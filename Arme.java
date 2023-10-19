@@ -5,12 +5,14 @@ public class Arme extends EquipementOffensif{
 
     /*---------------------------Constructeur---------------------------*/
     public Arme(){
-        super("Guerrier");
+        this.setGearType("Arme");
+        this.setValue(0);
+        this.setName("Rine");
     }
     public Arme(String type,int dmg){
-        super("Guerrier");
-        super.setName(type);
-        super.setValue(dmg);
+        this.setGearType("Arme");
+        this.setValue(dmg);
+        this.setName(type);
     }
 
 

@@ -5,13 +5,15 @@ public class Sort extends EquipementOffensif{
 
     /*---------------------------Constructeur---------------------------*/
     public Sort(){
-        super("Magicien");
+        this.setGearType("Sort");
+        this.setValue(0);
+        this.setName("Rine");
     }
 
     public Sort(String type,int dmg){
-        super("Magicien");
-        super.setName(type);
-        super.setValue(dmg);
+        this.setGearType("Sort");
+        this.setValue(dmg);
+        this.setName(type);
     }
 
 

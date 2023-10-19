@@ -1,4 +1,4 @@
-public class EquipementOffensif {
+public abstract class EquipementOffensif {
     /* Pas grand chose dans cette classe pour l'instant,
     seulement le type d'équipement dont il s'agit
     en fonction de la classe du personnage qui la possede */
@@ -11,17 +11,7 @@ public class EquipementOffensif {
 
 
     /*---------------------------Constructeur---------------------------*/
-    public EquipementOffensif(String classe){
-        if (classe.equals("Guerrier")){
-            this.gearType="Arme";
-        }else if (classe.equals("Magicien")){
-            this.gearType="Sort";
-        }else {
-            this.gearType="Rine";
-        }
-        this.value=0;
-        this.name="Rine";
-    }
+
 
     /*---------------------------Méthodes---------------------------*/
 

@@ -5,7 +5,9 @@ public class Bouclier extends EquipementDefensif{
 
     /*---------------------------Constructeur---------------------------*/
     public Bouclier(){
-        super("Guerrier");
+        this.setGearType("Bouclier");
+        this.setValue(0);
+        this.setName("Rine");
     }
     /*---------------------------Méthodes---------------------------*/
 

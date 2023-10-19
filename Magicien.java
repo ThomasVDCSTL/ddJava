@@ -5,22 +5,26 @@ public class Magicien extends Character{
 
     /*---------------------------Constructeur---------------------------*/
     public Magicien(String name){
-        super(name,6,15);
-        super.setAtkGear(new Sort());
-        super.setDefGear(new Philtre());
+        this.setName(name);
+        this.setAttack(8);
+        this.setMaxAttack(15);
+        this.setHp(3);
+        this.setMaxHp(6);
+        this.setAtkGear(new Sort());
+        this.setDefGear(new Philtre());
     }
 
 
     /*---------------------------Méthodes---------------------------*/
     public void getsHit(Character opponent){
-        super.setHp(super.getHp()-(opponent.getAttack()-super.getDefGear().getValue()));
+        this.setHp(this.getHp()-(opponent.getAttack()-this.getDefGear().getValue()));
     }
 
 
     /*---------------------------Setters/Getters---------------------------*/
 
     public int getAttack() {
-        return super.getAttack()+super.getAtkGear().getValue();
+        return super.getAttack()+this.getAtkGear().getValue();
     }
 
 
