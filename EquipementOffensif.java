@@ -15,24 +15,7 @@ public abstract class EquipementOffensif {
 
     /*---------------------------Méthodes---------------------------*/
 
-    public void setWeapon1(){
-        if (this.gearType.equals("Sort")){
-            this.name="Eclair";
-            this.value=2;
-        } else if (this.gearType.equals("Arme")) {
-            this.name="Massue";
-            this.value=3;
-        }
-    }
-    public void setWeapon2(){
-        if (this.gearType.equals("Arme")){
-            this.name="Epée";
-            this.value=5;
-        } else if (this.gearType.equals("Sort")) {
-            this.name="Boule de feu";
-            this.value=7;
-        }
-    }
+
 
     /*---------------------------Setters/Getters---------------------------*/
 

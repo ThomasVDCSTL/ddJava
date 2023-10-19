@@ -35,6 +35,8 @@ public abstract class Character {
     public String toString(){
         return "Personnage : "+name+", PV : "+hp+", Attaque : "+attack;
     }
+    public abstract void giveWeapon1();
+    public abstract void giveWeapon2();
 
 
 
@@ -96,4 +98,5 @@ public abstract class Character {
     public void setMaxAttack(int maxAttack) {
         this.maxAttack = maxAttack;
     }
+
 }

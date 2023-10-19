@@ -15,7 +15,7 @@ public class Guerrier extends Character{
     }
 
     /*---------------------------Méthodes---------------------------*/
-    public void getsHit(Character opponent){
+    public void getsHit(Character opponent) {
         this.setHp(this.getHp()-(opponent.getAttack()-this.getDefGear().getValue()));
     }
 
@@ -23,6 +23,12 @@ public class Guerrier extends Character{
 
     public int getAttack() {
         return super.getAttack()+this.getAtkGear().getValue();
+    }
+    public void giveWeapon1(){
+        this.setAtkGear(new Arme("Massue",3));
+    }
+    public void giveWeapon2(){
+        this.setAtkGear(new Sort("Epée",5));
     }
 
 }

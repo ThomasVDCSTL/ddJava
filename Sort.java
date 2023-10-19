@@ -10,10 +10,10 @@ public class Sort extends EquipementOffensif{
         this.setName("Rine");
     }
 
-    public Sort(String type,int dmg){
+    public Sort(String nom,int dmg){
         this.setGearType("Sort");
         this.setValue(dmg);
-        this.setName(type);
+        this.setName(nom);
     }
 
 

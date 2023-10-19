@@ -1,59 +1,19 @@
 import java.util.Random;
-public class Tile {
+public interface Tile {
 
     /*---------------------------Attributs---------------------------*/
-    private int id;
-    private boolean playerLocation;
-    private int event; /* Numéroté de 1 à 3 */
 
 
     /*---------------------------Constructeur---------------------------*/
-    public Tile(int ID){
-        this.id=ID;
-        this.setEvent();
-    }
-
 
 
     /*---------------------------Méthodes---------------------------*/
-    public String triggerEvent(){
-        String consequence;
-        if (this.event==2) {
-            consequence="bagarre";
-        } else if (this.event==3) {
-            consequence="cadeau";
-        } else {
-            consequence="rine";
-        }
-        return consequence;
-    }
+    public String triggerEvent();
+
+//    /*---------------------------Setters/Getters---------------------------*/
+
+    public void setId(int newID);
 
 
-    /*---------------------------Setters/Getters---------------------------*/
-
-    public boolean getPlayerLocation() {
-        return playerLocation;
-    }
-
-    public void setPlayerLocation(boolean playerLocation) {
-        this.playerLocation = playerLocation;
-    }
-
-
-    public void setId(int newID){
-        this.id=newID;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public int getEvent() {
-        return event;
-    }
-
-    public void setEvent() {
-        Random destin = new Random();
-        this.event = destin.ints(1, 4).findFirst().getAsInt();
-    }
 }
+

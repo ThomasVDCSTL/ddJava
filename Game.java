@@ -43,8 +43,11 @@ public class Game {
         return jeu.next();
     }
     public void initPlateau(){
-        for (int i = 0; i < 64; i++) {
-            this.plateau.add(new Tile(i+1));
+        for (int i = 1; i < 65; i++) {
+            destin = new Random();
+            int random=destin.ints(1, 4).findFirst().getAsInt();
+            Tile myTile=getTile(random,i);
+            this.plateau.add(myTile);
         }
     }
     public void deplacement (int jet){
@@ -70,27 +73,18 @@ public class Game {
             if (playerLocation<=64&&playerLocation>=0) {
                 String event = this.plateau.get(this.playerLocation-1).triggerEvent();
                 System.out.println("Evennement déclenché : " + event);
-                if (event.equals("bagarre")) {
-                    alive = this.combat(player);
+                if (this.plateau.get(this.playerLocation) instanceof Enemy adversary) {
+                    alive = this.combat(player,adversary);
                 } else if (event.equals("cadeau")) {
-                    this.getGift(player);
+                    this.giveGift(player);
                 }
                 if (alive) {
                     System.out.println("Vous continuez votre aventure");
                 }
-            } else {
-                try {
-                    if (this.playerLocation>64||this.playerLocation<0) {            /* refaire tout ça */
-                        throw new PersonnageHorsPlateauException();
-                    }
-                    String event = this.plateau.get(this.playerLocation-1).triggerEvent();
-                }catch (PersonnageHorsPlateauException e){ System.out.println("j'ai choppé l'erreur");}
-
             }
         }
     }
-    public boolean combat(Character player){
-        Character adversary=this.initCombat();
+    public boolean combat(Character player,Enemy adversary){
         System.out.println("Le combat contre "+adversary.getName()+" commence ... préparez vous !");
         adversary.getsHit(player);
         if (adversary.getHp()<=0){
@@ -107,32 +101,32 @@ public class Game {
         }
         return true;
     }
-    public Character initCombat(){
-        Character ennemy;
+    public Enemy initCombat(int id){
+        Enemy enemy;
         destin = new Random();
-        int ennemyType=destin.ints(1, 4).findFirst().getAsInt();
-        if (ennemyType==1){
-            ennemy= new Guerrier("Sorcier");
-        } else if (ennemyType==3) {
-            ennemy= new Guerrier("Dragon");
+        int enemyType=destin.ints(1, 4).findFirst().getAsInt();
+        if (enemyType==1){
+            enemy= new Enemy("Sorcier",9,2,id);
+        } else if (enemyType==3) {
+            enemy= new Enemy("Dragon",15,4,id);
         }else {
-            ennemy= new Guerrier("Gobelin");
+            enemy= new Enemy("Gobelin",6,1,id);
         }
-        return ennemy;
+        return enemy;
     }
-    public void getGift(Character player){
+    public void giveGift(Character player){
         destin = new Random();
         int giftType=destin.ints(1, 5).findFirst().getAsInt();
         if (giftType==1){
             if (player.getAtkGear().getName().equals("Rine")){
-                player.setAtkGear(this.giveWeapon1(player));
+                player.giveWeapon1();
                 System.out.println("Vous avez trouvé une arme sympa, vous gagnez "+player.getAtkGear().getValue()+" points d'attaque !");
             } else {
                 System.out.println("Vous avez trouvé une arme mais elle n'est pas mieux que celle que vous possédez déjà... vous la laissez ici!");
             }
         } else if (giftType==2) {
             if (player.getAtkGear().getName().equals("Rine")){
-                player.setAtkGear(this.giveWeapon2(player));
+                player.giveWeapon2();
                 System.out.println("Vous avez trouvé une arme de malade, vous gagnez "+player.getAtkGear().getValue()+" points d'attaque !");;
             } else {
                 System.out.println("Vous avez trouvé une arme mais elle n'est pas mieux que celle que vous possédez déjà... vous la laissez ici!");
@@ -145,21 +139,16 @@ public class Game {
             System.out.println("Vous avez trouvé une GRANDE POTION, votre nouveau montant de PV est : "+player.getHp());
         }
     }
-    public EquipementOffensif giveWeapon1(Character player){
-        if (player.getAtkGear().getGearType().equals("arme")){
-            return new Arme("Massue",3);
-        } else {
-            return new Sort("Eclair",2);
-        }
-    }
-    public EquipementOffensif giveWeapon2(Character player){
-        if (player.getAtkGear().getGearType().equals("arme")){
-            return new Arme("Epée",5);
-        } else {
-            return new Sort("Boule de feu",7);
-        }
-    }
     public ArrayList<Tile> getPlateau() {
         return plateau;
+    }
+    public Tile getTile(int choix,int id){
+        if (choix==1){
+            return initCombat(id);
+        } else if (choix==2) {
+            return new Potion(id);
+        }else {
+            return new EmptyTile(id);
+        }
     }
 }
