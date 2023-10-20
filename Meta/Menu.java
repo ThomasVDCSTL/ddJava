@@ -1,7 +1,7 @@
 package Meta;
 
 import Exceptions.LeavingGame;
-import Personnages.Character;
+import Personnages.Characters;
 import Personnages.Guerrier;
 import Personnages.Magicien;
 
@@ -14,7 +14,7 @@ public class Menu {
 
 
     /*---------------------------Attributs---------------------------*/
-    private ArrayList<Character> players = new ArrayList<Character>();
+    private ArrayList<Characters> players = new ArrayList<Characters>();
     Scanner initGame;
     private String state;
 
@@ -34,7 +34,7 @@ public class Menu {
         initGame = new Scanner(System.in);
         int choice =0;
         while(choice!=2&&choice!=3) {
-            System.out.println("-----Meta.Menu du jeu-----");
+            System.out.println("-----Menu du jeu-----");
             System.out.println("1_ Options");
             System.out.println("2_ Reprendre");
             System.out.println("3_ Quitter la partie");
@@ -61,56 +61,64 @@ public class Menu {
     public void leaveGame(Game partie){
         state = "leave";
     }
-    public ArrayList<Character> initPlayers(){
-
+    public ArrayList<Characters> initPlayers(){
         String check ="y";
-        String classe ="";
         int index=0;
         while (check.equals("y")) {
-            Character personnage;
-            System.out.println("Nom du personnage :");
-            String nom = initGame.next();
-            classe=this.classChoice(classe, initGame);
-            System.out.println("1_Nom :"+nom);
-            System.out.println("2_Classe :"+classe);
-            System.out.println("Voulez-vous changer quelque chose ? [y/n]");
-            String refonte=initGame.next();
-            while (refonte.equals("y")){
-                System.out.println("Quelle stat voulez vous changer ? [1-2]");
-                int choix = initGame.nextInt();
-                if (choix==1){
-                    System.out.println("Nouveau Nom :");
-                    nom=initGame.next();
-                } else if (choix==2) {
-                    System.out.println("Nouvelle classe :");
-                    classe="";
-                    classe=this.classChoice(classe, initGame);
-                }else {
-                    System.out.println("il n'y a pas de choix"+choix);
-                }
-                System.out.println("Vouez-vous changer autre chose ? [y/n]");
-                refonte=initGame.next();
-            }
-            if (classe.equals("Guerrier")) {
-                personnage = new Guerrier(nom);
-            } else {
-                personnage = new Magicien(nom);
-            }
-            this.players.add(personnage);
-            System.out.println("créer un autre personnage ? [n/y]");
-            check =initGame.next();
+            check=createCharacter();
             index++;
         }
-        index=0;
-        for (Character player:this.players) {
+        displayCharacters();
+        return this.players;
+    }
+    public String createCharacter(){
+        String classe ="";
+        Characters personnage;
+        System.out.println("Nom du personnage :");
+        String nom = initGame.next();
+        classe=this.classChoice(classe, initGame);
+        System.out.println("1_Nom :"+nom);
+        System.out.println("2_Classe :"+classe);
+        System.out.println("Voulez-vous changer quelque chose ? [y/n]");
+        String refonte=initGame.next();
+        while (refonte.equals("y")){
+            refonte = proposeChanging(nom,classe);
+        }
+        if (classe.equals("Guerrier")) {
+            personnage = new Guerrier(nom);
+        } else {
+            personnage = new Magicien(nom);
+        }
+        this.players.add(personnage);
+        System.out.println("créer un autre personnage ? [n/y]");
+        return initGame.next();
+    }
+    public void displayCharacters(){
+        int index=0;
+        for (Characters player:this.players) {
             index++;
             System.out.println("<--------Personnage n°"+index+"-------->");
             System.out.println("1_Nom :"+player.getName());
-            System.out.println("2_Classe :"+player.getClass());
+            System.out.println("2_Classe :"+player.getClass().getName());
             System.out.println("3_Points de vie :"+player.getHp());
             System.out.println("4_Attaque :"+player.getAttack());
         }
-        return this.players;
+    }
+    public String proposeChanging(String nom, String classe){
+        System.out.println("Quelle stat voulez vous changer ? [1-2]");
+        int choix = initGame.nextInt();
+        if (choix==1){
+            System.out.println("Nouveau Nom :");
+            nom=initGame.next();
+        } else if (choix==2) {
+            System.out.println("Nouvelle classe :");
+            classe="";
+            classe=this.classChoice(classe, initGame);
+        }else {
+            System.out.println("il n'y a pas de choix"+choix);
+        }
+        System.out.println("Vouez-vous changer autre chose ? [y/n]");
+        return initGame.next();
     }
     public void startGame() {
         String jouer="y";

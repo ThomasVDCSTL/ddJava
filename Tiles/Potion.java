@@ -1,4 +1,5 @@
 package Tiles;
+import Personnages.Characters;
 
 public class Potion implements Tile{
 
@@ -14,7 +15,11 @@ public class Potion implements Tile{
 
 
     /*---------------------------Méthodes---------------------------*/
-
+    @Override
+    public void interaction(Characters player) {
+        player.heals(this);
+        System.out.println("Vous trouvez une potion, nouveau montant de pv : " + player.getHp());
+    }
 
     /*---------------------------Setters/Getters---------------------------*/
 

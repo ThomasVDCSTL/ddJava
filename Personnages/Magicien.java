@@ -2,16 +2,15 @@ package Personnages;
 
 import Defensif.Philtre;
 import Offensif.Sort;
-import Personnages.Character;
 
-public class Magicien extends Character {
+public class Magicien extends Characters {
 
     /*---------------------------Attributs---------------------------*/
 
 
     /*---------------------------Constructeur---------------------------*/
     public Magicien(String name){
-        this.setName(name);
+        super(name);
         this.setAttack(8);
         this.setMaxAttack(15);
         this.setHp(3);
@@ -24,7 +23,7 @@ public class Magicien extends Character {
     /*---------------------------Méthodes---------------------------*/
 
 
-    public void getsHit(Character opponent) {
+    public void getsHit(Characters opponent) {
         this.setHp(this.getHp()-(opponent.getAttack()-this.getDefGear().getValue()));
     }
 

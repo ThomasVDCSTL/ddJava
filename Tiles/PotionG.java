@@ -6,4 +6,5 @@ public class PotionG extends Potion{
         super(id);
         this.setValue(5);
     }
+
 }

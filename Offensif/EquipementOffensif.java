@@ -7,7 +7,6 @@ public abstract class EquipementOffensif {
 
 
     /*---------------------------Attributs---------------------------*/
-    private String gearType;
     private String name;
     private int value;
 
@@ -21,13 +20,7 @@ public abstract class EquipementOffensif {
 
     /*---------------------------Setters/Getters---------------------------*/
 
-    public String getGearType() {
-        return gearType;
-    }
-
-    public void setGearType(String gearType) {
-        this.gearType = gearType;
-    }
+    public abstract String getGearType();
 
     public String getName() {
         return name;

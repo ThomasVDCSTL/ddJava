@@ -1,4 +1,5 @@
 package Tiles;
+import Personnages.Characters;
 
 public class EmptyTile implements Tile{
 
@@ -13,7 +14,10 @@ public class EmptyTile implements Tile{
     }
 
     /*---------------------------Méthodes---------------------------*/
-
+    @Override
+    public void interaction(Characters player) {
+        System.out.println("Rien dans cette pièce");
+    }
     /*---------------------------Setters/Getters---------------------------*/
 
     public int getId() {

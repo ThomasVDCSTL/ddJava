@@ -4,14 +4,14 @@ import Defensif.EquipementDefensif;
 import Offensif.EquipementOffensif;
 import Tiles.Potion;
 
-public abstract class Character {
+public abstract class Characters {
     /* Classe de personnage contenant les attributs nécessaires
     ainsi que les méthodes permettant de les utiliser */
 
 
 
     /*---------------------------Attributs---------------------------*/
-    private String name;
+    private final String name;
     private int hp;
     private int maxHp;
     private int attack;
@@ -23,11 +23,13 @@ public abstract class Character {
 
     /*---------------------------Constructeur---------------------------*/
 
-
+    public Characters (String nom){
+        this.name=nom;
+    }
 
     /*---------------------------Méthodes---------------------------*/
 
-    public void getsHit(Character opponent){
+    public void getsHit(Characters opponent){
         this.hp-=(opponent.getAttack());
     }
 
@@ -37,9 +39,12 @@ public abstract class Character {
             this.hp=this.maxHp;
         }
     }
+    public void playFightTurn(Characters enemy){
+
+    }
     public boolean canEquip(EquipementOffensif stuff){
-        EquipementOffensif comparatif =this.getAtkGear();
-        if (comparatif.getGearType().equals(stuff.getGearType())&&stuff.getValue()>comparatif.getValue()){
+        EquipementOffensif actualStuff =this.getAtkGear();
+        if (actualStuff.getGearType().equals(stuff.getGearType())&&stuff.getValue()>actualStuff.getValue()){
             return true;
         }
         return false;
@@ -62,11 +67,6 @@ public abstract class Character {
 
     public int getAttack() {
         return attack;
-    }
-
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public void setHp(int hp) {
