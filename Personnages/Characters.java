@@ -1,6 +1,7 @@
 package Personnages;
 
 import Defensif.EquipementDefensif;
+import Exceptions.FightOverByDeathOf;
 import Offensif.EquipementOffensif;
 import Tiles.Potion;
 
@@ -31,6 +32,8 @@ public abstract class Characters {
 
     public void getsHit(Characters opponent){
         this.hp-=(opponent.getAttack());
+        System.out.println(opponent.getName()+" attaque "+this.getName()+" pour "+opponent.getAttack());
+        System.out.println(this.getName()+"'s HP : "+this.getHp());
     }
 
     public void heals(Potion potion){
@@ -39,15 +42,20 @@ public abstract class Characters {
             this.hp=this.maxHp;
         }
     }
-    public void playFightTurn(Characters enemy){
 
-    }
     public boolean canEquip(EquipementOffensif stuff){
         EquipementOffensif actualStuff =this.getAtkGear();
         if (actualStuff.getGearType().equals(stuff.getGearType())&&stuff.getValue()>actualStuff.getValue()){
             return true;
         }
         return false;
+    }
+
+    public void playFightTurn(Characters truc)throws FightOverByDeathOf {
+        truc.getsHit(this);
+        if (truc.getHp()<=0){
+            throw new FightOverByDeathOf(truc);
+        }
     }
 
     public String toString(){
@@ -108,5 +116,6 @@ public abstract class Characters {
     public void setMaxAttack(int maxAttack) {
         this.maxAttack = maxAttack;
     }
+
 
 }

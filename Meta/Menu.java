@@ -102,6 +102,7 @@ public class Menu {
             System.out.println("2_Classe :"+player.getClass().getName());
             System.out.println("3_Points de vie :"+player.getHp());
             System.out.println("4_Attaque :"+player.getAttack());
+            System.out.println("5_AttaqueGear :"+player.getAtkGear().getName());
         }
     }
     public String proposeChanging(String nom, String classe){

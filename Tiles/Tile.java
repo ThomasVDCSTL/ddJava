@@ -1,8 +1,9 @@
 package Tiles;
 
+import Exceptions.ReculDeNcases;
 import Personnages.Characters;
+import Exceptions.FightOverByDeathOf;
 
-import java.util.Random;
 public interface Tile {
 
     /*---------------------------Attributs---------------------------*/
@@ -13,7 +14,7 @@ public interface Tile {
 
     /*---------------------------Méthodes---------------------------*/
 
-     public void interaction(Characters player);
+     public void interaction(Characters player) throws ReculDeNcases, FightOverByDeathOf;
 
     /*---------------------------Setters/Getters---------------------------*/
 

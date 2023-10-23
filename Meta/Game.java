@@ -1,9 +1,11 @@
 package Meta;
 
 import Exceptions.LeavingGame;
+import Exceptions.ReculDeNcases;
 import Offensif.*;
 import Personnages.Characters;
 import Personnages.Enemy;
+import Exceptions.FightOverByDeathOf;
 import Tiles.*;
 
 import java.util.ArrayList;
@@ -78,13 +80,24 @@ public class Game {
         }
         if (choix.equals("lancer")) {
             this.startTurn();
-            if (playerLocation < 64 && playerLocation >= 0) {
+            System.out.println(this.inspect(player));
+        }
+    }
+    public String inspect(Characters player){
+        if (playerLocation < 64 && playerLocation >= 0) {
+            try {
                 this.plateau.get(this.playerLocation).interaction(player);
-                if (player.getHp()>0) {
-                    System.out.println("Vous continuez votre aventure");
-                }
+            }catch (ReculDeNcases e){
+                playerLocation-=e.getN();
+                inspect(player);
+            }catch (FightOverByDeathOf e2) {
+                this.plateau.set(this.playerLocation,new EmptyTile(playerLocation));
+            }
+            if (player.getHp()>0) {
+               return "Vous continuez votre aventure";
             }
         }
+        return "L'aventure s'arrête ici";
     }
     public void startTurn(){
         destin = new Random();

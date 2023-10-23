@@ -2,6 +2,7 @@ package Meta;
 
 import Exceptions.LeavingGame;
 
+import javax.swing.*;
 import java.util.Scanner;
 
 public class Main {
@@ -11,6 +12,7 @@ public class Main {
 
     /*---------------------------Lancement du programme---------------------------*/
     public static void main(String[] args) {
+        Fenetre f = new Fenetre();
         Scanner typing = new Scanner(System.in);
         Menu menu = new Menu();
         menu.startGame();
