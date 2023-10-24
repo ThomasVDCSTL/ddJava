@@ -4,7 +4,9 @@ import Exceptions.LeavingGame;
 import Personnages.Characters;
 import Personnages.Guerrier;
 import Personnages.Magicien;
+import com.mysql.cj.Query;
 
+import java.sql.*;
 import java.util.Scanner;
 import java.util.ArrayList;
 
@@ -17,10 +19,12 @@ public class Menu {
     private ArrayList<Characters> players = new ArrayList<Characters>();
     Scanner initGame;
     private String state;
+    private Connection mydb;
 
 
     /*---------------------------Constructeur---------------------------*/
-    public Menu(){
+    public Menu(Connection mydb){
+        this.mydb=mydb;
         initGame = new Scanner(System.in);
         System.out.println("Bienvenu dans cette version de custom de Donjons et Dragons !");
         System.out.println("La partie va bientôt commencer..");
@@ -105,6 +109,29 @@ public class Menu {
             System.out.println("5_AttaqueGear :"+player.getAtkGear().getName());
         }
     }
+//    public void setHeroName (String nom){
+//        Statement stmt = null;
+//        try {
+//            stmt = mydb.createStatement( );
+//            Query q=INSERT INTO hero (name) VALUES (?);
+//            int nbr=stmt.executeUpdate("INSERT INTO hero (name) VALUES (nom)");
+//        }
+//        catch (SQLException e) {
+//
+//        }
+//    }
+    public String getHeroName() throws SQLException {
+        Statement stmt = null;
+        ResultSet nom = null;
+        try {
+            stmt = mydb.createStatement( );
+            nom=stmt.executeQuery("SELECT * FROM hero WHERE id=1");
+        }
+        catch (SQLException e) {
+
+        }
+        return nom.getString("name");
+    }
     public String proposeChanging(String nom, String classe){
         System.out.println("Quelle stat voulez vous changer ? [1-2]");
         int choix = initGame.nextInt();
@@ -129,6 +156,7 @@ public class Menu {
             try {
                 jouer = partie.playGame();
             }catch (LeavingGame e){
+                System.out.println(e.getMessage());
                 partie=null;
                 System.gc();
                 System.out.println("On recommence ? [y/n]");

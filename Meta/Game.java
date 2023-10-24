@@ -1,3 +1,6 @@
+/**
+ * on a game et tout
+ */
 package Meta;
 
 import Exceptions.LeavingGame;
@@ -12,6 +15,12 @@ import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.Random;
 
+/**
+ * blabla
+ *
+ *
+ *
+ */
 public class Game {
 
     /*---------------------------Attributs---------------------------*/
@@ -47,12 +56,7 @@ public class Game {
     public String playGame() throws LeavingGame {
         Scanner jeu = new Scanner(System.in);
         while (this.playerLocation < 64 && this.joueurs.get(0).getHp() > 0) {
-            try {
-                playerTurn(jeu, this.joueurs.get(0));
-            } catch (LeavingGame e) {
-
-                throw e;
-            }
+            playerTurn(jeu, this.joueurs.get(0));
         }
         return getEndingMessage(jeu);
     }
@@ -67,8 +71,13 @@ public class Game {
         }
     }
 
-
-    public void playerTurn(Scanner jeu, Characters player) throws LeavingGame {        /* Possibilité de rajouter un paramètre joueur pour les faire bouger individuellement */
+    /**
+     * blabla2
+     * @param jeu oui
+     * @param player
+     * @throws LeavingGame
+     */
+    public void playerTurn(Scanner jeu, Characters player) throws LeavingGame {
         System.out.println("Tapez 'lancer' pour lancer le dé");
         String choix = jeu.next();
         if (choix.equals("menu")) {
