@@ -9,7 +9,7 @@ public class Fenetre extends JFrame{
 
 
 
-        this.setTitle("ma Fenêtre");
+        this.setTitle("ma Fenêtre !");
 //        this.setIconImage();
         this.setSize(600,400);
         this.setLocationRelativeTo(null);
