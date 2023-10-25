@@ -22,19 +22,6 @@ public class DatabaseCRUD {
             System.exit(1);
         }
     }
-    public String getHeroName() throws SQLException {
-        Statement stmt = null;
-        ResultSet nom = null;
-        stmt = mydb.createStatement( );
-        nom=stmt.executeQuery("SELECT * FROM hero");
-
-        String myName = "";
-        while (nom.next()){
-            myName = nom.getString("name");
-        }
-
-        return nom.getString("name");
-    }
 
     public ArrayList<Characters> getHeroList()throws SQLException{
         Statement stmt = null;
@@ -76,6 +63,20 @@ public class DatabaseCRUD {
         pstmt.setInt(7,hero.getEmplacement());
         pstmt.executeUpdate();
     }
+    public void updateHero(Characters hero) throws SQLException{
+        PreparedStatement pstmt = mydb.prepareStatement("UPDATE hero SET hp=?,offensiveItemID=?,defensiveItemID=?,emplacement=? WHERE name=?");
+        pstmt.setInt(1,hero.getHp());
+        pstmt.setInt(2,getIDFromOffensiveItem(hero.getAtkGear()));
+        pstmt.setInt(3,getIDFromDefensiveItem(hero.getDefGear()));
+        pstmt.setInt(4,hero.getEmplacement());
+        pstmt.setString(5, hero.getName());
+        pstmt.executeUpdate();
+    }
+    public void deleteHero(String name)throws SQLException{
+        PreparedStatement pstmt=mydb.prepareStatement("DELETE FROM hero WHERE name=?");
+        pstmt.setString(1, name);
+        pstmt.executeUpdate();
+    }
 
     public EquipementDefensif getDefensiveItemFromID(int id){
         switch (id) {
@@ -106,20 +107,13 @@ public class DatabaseCRUD {
         }
     }
     public int getIDFromOffensiveItem(EquipementOffensif item){
-        if (item instanceof Epee) {
-            return 5;
-        } else if (item instanceof BouleDeFeu) {
-            return 6;
-        } else if (item instanceof Massue) {
-            return 3;
-        } else if (item instanceof Eclair) {
-            return 4;
-        } else if (item instanceof Arme) {
-            return 1;
-        } else if (item instanceof Sort) {
-            return 2;
-        }
-        return 0;
+        if (item instanceof Epee) {return 5;}
+        else if (item instanceof BouleDeFeu) {return 6;}
+        else if (item instanceof Massue) {return 3;}
+        else if (item instanceof Eclair) {return 4;}
+        else if (item instanceof Arme) {return 1;}
+        else if (item instanceof Sort) {return 2;}
+        else{return 0;}
     }
 
 }

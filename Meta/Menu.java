@@ -61,29 +61,38 @@ public class Menu {
 
     public void getStartMenu()throws SQLException{
         int choix = 0;
-        while (choix!=3) {
+        while (choix!=4) {
             choix = 0;
             System.out.println("------Menu de Départ------");
             System.out.println("1_ Création Personnage");
             System.out.println("2_ Séléction Personnage");
-            System.out.println("3_ Jouer");
-            while (choix < 1 || choix > 3) {
+            System.out.println("3_ Supprimer Personnage");
+            System.out.println("4_ Jouer");
+            while (choix < 1 || choix > 4) {
                 choix = initGame.nextInt();
             }
             if (choix == 1) {
                 createCharacter();
             } else if (choix == 2) {
                 selectHero();
-            } else {
+            } else if (choix==3) {
+                try {
+                    deleteHero();
+                }catch(SQLException e){
+                    System.out.println("Aucun personnage supprimé, vérifiez l'ortographe");
+                }
+            }else {
                 if(actualHero==null){
                     System.out.println("Veuillez séléctionner un personnage avant de commencer..");
                     choix=0;
-                }
-                Game myGame=new Game(actualHero);
-                try {
-                    myGame.playGame();
-                }catch (LeavingGame e){
-                    System.out.println("Vous quittez la partie");
+                }else {
+                    Game myGame = new Game(actualHero);
+                    try {
+                        myGame.playGame();
+                    } catch (LeavingGame e) {
+                        System.out.println("Vous quittez la partie");
+                        mydb.updateHero(actualHero);
+                    }
                 }
             }
         }
@@ -116,6 +125,13 @@ public class Menu {
         }
         actualHero= heroes.get(choix-1);
     }
+    public void deleteHero()throws SQLException{
+        ArrayList<Characters> heroes= mydb.getHeroList();
+        displayHeros(heroes);
+        System.out.println("Quel personnage voulez vous supprimer ? [Nom du personnage]");
+        String choix = initGame.next();
+        mydb.deleteHero(choix);
+    }
     public void createCharacter()throws SQLException{
         String classe ="";
         Characters personnage;
@@ -135,7 +151,8 @@ public class Menu {
             personnage = new Magicien(nom);
         }
         mydb.createHero(personnage);
-        System.out.println("Personnage créé");
+        actualHero=personnage;
+        System.out.println("Personnage créé et séléctionné");
     }
     public void displayCharacters(){
         int index=0;
@@ -161,6 +178,7 @@ public class Menu {
             System.out.println("Equipement offensif : "+hero.getAtkGear().getName());
             System.out.println("Equipement defensif : "+hero.getDefGear().getName());
         }
+        System.out.println("-----------------");
     }
     public String proposeChanging(String nom, String classe){
         System.out.println("Quelle stat voulez vous changer ? [1-2]");
