@@ -86,15 +86,10 @@ public class DatabaseCRUD {
         }
     }
     public int getIDFromDefensiveItem(EquipementDefensif item){
-        if (item instanceof Bouclier) {
-            return 1;
-        } else if (item instanceof Philtre) {
-            return 2;
-        }
-        return 0;
+        if (item instanceof Bouclier) {return 1;}
+        else if (item instanceof Philtre) {return 2;}
+        else{return 0;}
     }
-
-
     public EquipementOffensif getOffensiveItemFromID(int id){
         switch (id) {
             case 1 -> {return new Arme();}

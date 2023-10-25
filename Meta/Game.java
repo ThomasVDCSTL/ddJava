@@ -97,10 +97,10 @@ public class Game {
                 joueur.setEmplacement(joueur.getEmplacement()-e.getN());
                 inspect(player);
             }catch (FightOverByDeathOf e2) {
-                this.plateau.set(joueur.getEmplacement(),new EmptyTile(joueur.getEmplacement()));
             }
             if (player.getHp()>0) {
-               return "Vous continuez votre aventure";
+                this.plateau.set(joueur.getEmplacement(),new EmptyTile(joueur.getEmplacement()));
+                return "Vous continuez votre aventure";
             }
         }
         return "L'aventure s'arrête ici";
