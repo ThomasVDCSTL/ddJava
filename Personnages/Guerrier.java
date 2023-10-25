@@ -10,7 +10,7 @@ public class Guerrier extends Characters {
 
     /*---------------------------Constructeur---------------------------*/
     public Guerrier(String name) {
-        super(name);
+        super(name,"guerrier");
         this.setAttack(5);
         this.setMaxAttack(10);
         this.setHp(5);

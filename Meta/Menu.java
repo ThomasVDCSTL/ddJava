@@ -19,12 +19,13 @@ public class Menu {
     private ArrayList<Characters> players = new ArrayList<Characters>();
     Scanner initGame;
     private String state;
-    private Connection mydb;
+    DatabaseCRUD mydb;
+    Characters actualHero = null;
 
 
     /*---------------------------Constructeur---------------------------*/
-    public Menu(Connection mydb){
-        this.mydb=mydb;
+    public Menu(){
+        mydb=new DatabaseCRUD();
         initGame = new Scanner(System.in);
         System.out.println("Bienvenu dans cette version de custom de Donjons et Dragons !");
         System.out.println("La partie va bientôt commencer..");
@@ -32,7 +33,6 @@ public class Menu {
         System.out.println("A tout moment de la partie vous pouvez taper 'menu' pour afficher le menu");
         System.out.println("Il vous suffira après de suivre les instructions");
         System.out.println("Bon jeu a vous ! [Dis 'merci' !]");
-        String demarrer = initGame.next();
     }
     public Menu(Game partie){
         initGame = new Scanner(System.in);
@@ -58,6 +58,36 @@ public class Menu {
 
 
     /*---------------------------Méthodes---------------------------*/
+
+    public void getStartMenu()throws SQLException{
+        int choix = 0;
+        while (choix!=3) {
+            choix = 0;
+            System.out.println("------Menu de Départ------");
+            System.out.println("1_ Création Personnage");
+            System.out.println("2_ Séléction Personnage");
+            System.out.println("3_ Jouer");
+            while (choix < 1 || choix > 3) {
+                choix = initGame.nextInt();
+            }
+            if (choix == 1) {
+                createCharacter();
+            } else if (choix == 2) {
+                selectHero();
+            } else {
+                if(actualHero==null){
+                    System.out.println("Veuillez séléctionner un personnage avant de commencer..");
+                    choix=0;
+                }
+                Game myGame=new Game(actualHero);
+                try {
+                    myGame.playGame();
+                }catch (LeavingGame e){
+                    System.out.println("Vous quittez la partie");
+                }
+            }
+        }
+    }
     public void displayOptions(){
         System.out.println("pas d'options pour le moment....[ok]");
         initGame.next();
@@ -65,17 +95,28 @@ public class Menu {
     public void leaveGame(Game partie){
         state = "leave";
     }
-    public ArrayList<Characters> initPlayers(){
-        String check ="y";
-        int index=0;
-        while (check.equals("y")) {
-            check=createCharacter();
-            index++;
+//    public ArrayList<Characters> initPlayers()throws SQLException{
+//        String check ="y";
+//        int index=0;
+//        while (check.equals("y")) {
+//            createCharacter();
+//            index++;
+//        }
+//        displayCharacters();
+//        return this.players;
+//    }
+    public void selectHero()throws SQLException{
+        ArrayList<Characters> heroes= mydb.getHeroList();
+        displayHeros(heroes);
+        int choix=0;
+        while (choix<1||choix>heroes.size()) {
+            System.out.println("Votre choix : ");
+            choix = initGame.nextInt();
+
         }
-        displayCharacters();
-        return this.players;
+        actualHero= heroes.get(choix-1);
     }
-    public String createCharacter(){
+    public void createCharacter()throws SQLException{
         String classe ="";
         Characters personnage;
         System.out.println("Nom du personnage :");
@@ -93,9 +134,8 @@ public class Menu {
         } else {
             personnage = new Magicien(nom);
         }
-        this.players.add(personnage);
-        System.out.println("créer un autre personnage ? [n/y]");
-        return initGame.next();
+        mydb.createHero(personnage);
+        System.out.println("Personnage créé");
     }
     public void displayCharacters(){
         int index=0;
@@ -109,28 +149,18 @@ public class Menu {
             System.out.println("5_AttaqueGear :"+player.getAtkGear().getName());
         }
     }
-//    public void setHeroName (String nom){
-//        Statement stmt = null;
-//        try {
-//            stmt = mydb.createStatement( );
-//            Query q=INSERT INTO hero (name) VALUES (?);
-//            int nbr=stmt.executeUpdate("INSERT INTO hero (name) VALUES (nom)");
-//        }
-//        catch (SQLException e) {
-//
-//        }
-//    }
-    public String getHeroName() throws SQLException {
-        Statement stmt = null;
-        ResultSet nom = null;
-        try {
-            stmt = mydb.createStatement( );
-            nom=stmt.executeQuery("SELECT * FROM hero WHERE id=1");
-        }
-        catch (SQLException e) {
 
+    public void displayHeros (ArrayList<Characters> heroList){
+        for (int i = 1; i < heroList.size()+1; i++) {
+            Characters hero=heroList.get(i-1);
+            System.out.println("-----Hero n°"+i+"-----");
+            System.out.println("Name : "+hero.getName());
+            System.out.println("Classe : "+hero.getType());
+            System.out.println("Points de vie : "+hero.getHp());
+            System.out.println("Emplacement dans le donjon : "+hero.getEmplacement());
+            System.out.println("Equipement offensif : "+hero.getAtkGear().getName());
+            System.out.println("Equipement defensif : "+hero.getDefGear().getName());
         }
-        return nom.getString("name");
     }
     public String proposeChanging(String nom, String classe){
         System.out.println("Quelle stat voulez vous changer ? [1-2]");
@@ -148,11 +178,10 @@ public class Menu {
         System.out.println("Vouez-vous changer autre chose ? [y/n]");
         return initGame.next();
     }
-    public void startGame() {
+    public void startGame()throws SQLException {
         String jouer="y";
-        this.initPlayers();
         while (jouer.equals("y")) {
-            Game partie = new Game(this.players);
+            Game partie = new Game(actualHero);
             try {
                 jouer = partie.playGame();
             }catch (LeavingGame e){

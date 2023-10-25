@@ -17,7 +17,7 @@ public class Enemy extends Characters implements Tile {
     public Random destin;
     /*---------------------------Constructeur---------------------------*/
     public Enemy(String name, int pv, int atk,int Id){
-        super(name);
+        super(name,"ennemi");
         this.setAttack(atk);
         this.setHp(pv);
         this.setAtkGear(new Arme());

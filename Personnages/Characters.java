@@ -13,19 +13,22 @@ public abstract class Characters {
 
     /*---------------------------Attributs---------------------------*/
     private final String name;
+    private final String type;
     private int hp;
     private int maxHp;
     private int attack;
     private int maxAttack;
     private EquipementOffensif atkGear;
     private EquipementDefensif defGear;
+    private int emplacement;
 
 
 
     /*---------------------------Constructeur---------------------------*/
 
-    public Characters (String nom){
+    public Characters (String nom, String type){
         this.name=nom;
+        this.type=type;
     }
 
     /*---------------------------Méthodes---------------------------*/
@@ -117,5 +120,15 @@ public abstract class Characters {
         this.maxAttack = maxAttack;
     }
 
+    public String getType() {
+        return type;
+    }
 
+    public int getEmplacement() {
+        return emplacement;
+    }
+
+    public void setEmplacement(int emplacement) {
+        this.emplacement = emplacement;
+    }
 }

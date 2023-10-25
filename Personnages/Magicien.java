@@ -10,7 +10,7 @@ public class Magicien extends Characters {
 
     /*---------------------------Constructeur---------------------------*/
     public Magicien(String name){
-        super(name);
+        super(name,"magicien");
         this.setAttack(8);
         this.setMaxAttack(15);
         this.setHp(3);

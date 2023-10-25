@@ -1,6 +1,4 @@
-/**
- * on a game et tout
- */
+
 package Meta;
 
 import Exceptions.LeavingGame;
@@ -24,10 +22,10 @@ import java.util.Random;
 public class Game {
 
     /*---------------------------Attributs---------------------------*/
-    private int playerLocation;
+
     private ArrayList<Tile> plateau = new ArrayList<Tile>();
     Random destin;
-    ArrayList<Characters> joueurs;
+    Characters joueur;
     Menu menu;
 
     private int maxEnemies;
@@ -44,10 +42,9 @@ public class Game {
 
 
     /*---------------------------Constructeur---------------------------*/
-    public Game(ArrayList<Characters> players) {
+    public Game(Characters player) {
         this.initPlateau();
-        this.joueurs = players;
-        this.playerLocation = 1;
+        this.joueur = player;
     }
 
     /*---------------------------Méthodes---------------------------*/
@@ -55,8 +52,8 @@ public class Game {
 
     public String playGame() throws LeavingGame {
         Scanner jeu = new Scanner(System.in);
-        while (this.playerLocation < 64 && this.joueurs.get(0).getHp() > 0) {
-            playerTurn(jeu, this.joueurs.get(0));
+        while (joueur.getEmplacement() < 64 && joueur.getHp() > 0) {
+            playerTurn(jeu, this.joueur);
         }
         return getEndingMessage(jeu);
     }
@@ -72,10 +69,10 @@ public class Game {
     }
 
     /**
-     * blabla2
-     * @param jeu oui
-     * @param player
-     * @throws LeavingGame
+     * fonction qui sert a jouer un tour
+     * @param jeu objet scanner pour les inputs joueur
+     * @param player objet de type character représentant le joueur
+     * @throws LeavingGame exception venant de l'option quitter la partie du menu ingame
      */
     public void playerTurn(Scanner jeu, Characters player) throws LeavingGame {
         System.out.println("Tapez 'lancer' pour lancer le dé");
@@ -93,14 +90,14 @@ public class Game {
         }
     }
     public String inspect(Characters player){
-        if (playerLocation < 64 && playerLocation >= 0) {
+        if (joueur.getEmplacement() < 64 && joueur.getEmplacement() >= 0) {
             try {
-                this.plateau.get(this.playerLocation).interaction(player);
+                this.plateau.get(joueur.getEmplacement()).interaction(player);
             }catch (ReculDeNcases e){
-                playerLocation-=e.getN();
+                joueur.setEmplacement(joueur.getEmplacement()-e.getN());
                 inspect(player);
             }catch (FightOverByDeathOf e2) {
-                this.plateau.set(this.playerLocation,new EmptyTile(playerLocation));
+                this.plateau.set(joueur.getEmplacement(),new EmptyTile(joueur.getEmplacement()));
             }
             if (player.getHp()>0) {
                return "Vous continuez votre aventure";
@@ -112,17 +109,19 @@ public class Game {
         destin = new Random();
         int dice = destin.ints(1, 7).findFirst().getAsInt();
         this.deplacement(dice);
-        System.out.println("Position joueur : " + this.playerLocation);
+        System.out.println("Position joueur : " + joueur.getEmplacement());
     }
     public void deplacement(int jet) {
-        this.playerLocation += jet;
+        joueur.setEmplacement(joueur.getEmplacement()+jet);
     }
 
     public Tile getTile(int choix, int id) {
         if (choix == 1 && this.maxEnemies!=24 && id > 10) {
             return initCombat(id);
-        } else {
+        } else if (choix!=3 && this.maxChests!=24){
             return initChest(id);
+        } else {
+            return new EmptyTile(id);
         }
     }
     public Tile initCombat(int id) {
@@ -176,9 +175,9 @@ public class Game {
         return plateau;
     }
     public String getEndingMessage(Scanner jeu){
-        if (this.playerLocation < 64) {
+        if (joueur.getEmplacement() < 64) {
             System.out.print("T'as perdu gros bouffon !");
-        } else if (this.joueurs.get(0).getHp() > 0) {
+        } else if (this.joueur.getHp() > 0) {
             System.out.print("GG WP !");
         }
         System.out.println("On recommence ? [y/n]");
