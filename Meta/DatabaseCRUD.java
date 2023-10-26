@@ -10,25 +10,23 @@ import java.sql.*;
 import java.util.ArrayList;
 
 public class DatabaseCRUD {
-    Connection mydb;
+    private Connection mydb;
     public DatabaseCRUD() {
         try {
             Driver myDriver = new com.mysql.jdbc.Driver();
             DriverManager.registerDriver(myDriver);
             String URL = "jdbc:mysql://localhost:3306/mydb_java";
-            mydb = DriverManager.getConnection(URL, "root2", "");
+            this.mydb = DriverManager.getConnection(URL, "root", "root");
         } catch (SQLException e) {
-            System.out.println("Error: unable to load driver class! dès le début");
+            System.out.println("Error: unable to load driver class!");
             System.exit(1);
         }
     }
 
     public ArrayList<Characters> getHeroList()throws SQLException{
-        Statement stmt = null;
-        ResultSet heroData = null;
         ArrayList<Characters> heroList = new ArrayList<Characters>();
-        stmt = mydb.createStatement( );
-        heroData=stmt.executeQuery("SELECT * FROM hero");
+        Statement stmt = mydb.createStatement( );
+        ResultSet heroData=stmt.executeQuery("SELECT * FROM hero");
         while (heroData.next()){
             Characters myHero;
             String heroName = heroData.getString("name");
