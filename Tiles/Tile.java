@@ -19,6 +19,7 @@ public interface Tile {
     /*---------------------------Setters/Getters---------------------------*/
 
     public void setId(int newID);
+    public int getId();
 
 
 }

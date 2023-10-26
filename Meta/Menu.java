@@ -1,12 +1,22 @@
 package Meta;
 
 import Exceptions.LeavingGame;
+import Offensif.BouleDeFeu;
+import Offensif.Eclair;
+import Offensif.Epee;
+import Offensif.Massue;
 import Personnages.Characters;
+import Personnages.Enemy;
 import Personnages.Guerrier;
 import Personnages.Magicien;
+import Tiles.EmptyTile;
+import Tiles.PotionG;
+import Tiles.PotionM;
+import Tiles.Tile;
 import com.mysql.cj.Query;
 
 import java.sql.*;
+import java.util.Random;
 import java.util.Scanner;
 import java.util.ArrayList;
 
@@ -21,11 +31,24 @@ public class Menu {
     private String state;
     DatabaseCRUD mydb;
     Characters actualHero = null;
+    Random destin;
+    private int maxEnemies;
+    private int maxDragons;
+    private int maxSorciers;
+    private int maxGobelins;
+    private int maxChests;
+    private int maxMassues;
+    private int maxEpees;
+    private int maxEclairs;
+    private int maxBouleDF;
+    private int maxPotionM;
+    private int maxPotionG;
 
 
     /*---------------------------Constructeur---------------------------*/
     public Menu(){
         mydb=new DatabaseCRUD();
+        destin=new Random();
         initGame = new Scanner(System.in);
         System.out.println("Bienvenu dans cette version de custom de Donjons et Dragons !");
         System.out.println("La partie va bientôt commencer..");
@@ -150,6 +173,7 @@ public class Menu {
         } else {
             personnage = new Magicien(nom);
         }
+        initPlateau(personnage);
         mydb.createHero(personnage);
         actualHero=personnage;
         System.out.println("Personnage créé et séléctionné");
@@ -232,5 +256,70 @@ public class Menu {
 
     public void setState(String state) {
         this.state = state;
+    }public void initPlateau(Characters joueur) {
+        ArrayList<Tile> plateau = new ArrayList<Tile>();
+        for (int i = 1; i < 65; i++) {
+            destin = new Random();
+            int random = destin.ints(1, 4).findFirst().getAsInt();
+            Tile myTile = getTile(random, i);
+            plateau.add(myTile);
+        }
+        joueur.setPlateau(plateau);
     }
+    public Tile getTile(int choix, int id) {
+        if (choix == 1 && this.maxEnemies!=24 && id > 10) {
+            return initCombat(id);
+        } else if (choix!=3 && this.maxChests!=24){
+            return initChest(id);
+        } else {
+            return new EmptyTile(id);
+        }
+    }
+    public Tile initCombat(int id) {
+        destin = new Random();
+        int enemyType = destin.ints(1, 4).findFirst().getAsInt();
+        if (enemyType == 1&&this.maxSorciers!=10) {
+            this.maxEnemies++;
+            this.maxSorciers++;
+            return new Enemy("Sorcier", 9, 2, id);
+        } else if (enemyType == 3&&this.maxDragons!=4&&id>40) {
+            this.maxEnemies++;
+            this.maxDragons++;
+            return new Enemy("Dragon", 15, 4, id);
+        } else {
+            this.maxEnemies++;
+            this.maxGobelins++;
+            return new Enemy("Gobelin", 6, 1, id);
+        }
+    }
+    public Tile initChest(int id){
+        destin = new Random();
+        int newchoice = destin.ints(1, 7).findFirst().getAsInt();
+        if (newchoice==6&&this.maxPotionG!=2) {
+            this.maxPotionG++;
+            this.maxChests++;
+            return new PotionG(id);
+        }else if (newchoice == 2 &&this.maxEclairs!=5) {
+            this.maxEclairs++;
+            this.maxChests++;
+            return (Tile) new Eclair(id);
+        } else if (newchoice == 3 &&this.maxBouleDF!=2) {
+            this.maxBouleDF++;
+            this.maxChests++;
+            return (Tile) new BouleDeFeu(id);
+        } else if (newchoice == 4 &&this.maxMassues!=5) {
+            this.maxMassues++;
+            this.maxChests++;
+            return (Tile) new Massue(id);
+        } else if (newchoice == 5 &&this.maxEpees!=4) {
+            this.maxEpees++;
+            this.maxChests++;
+            return (Tile) new Epee(id);
+        } else {
+            this.maxPotionM++;
+            this.maxChests++;
+            return new PotionM(id);
+        }
+    }
+
 }

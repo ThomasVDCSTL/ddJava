@@ -2,12 +2,16 @@ package Meta;
 
 import Defensif.*;
 import Offensif.*;
-import Personnages.Characters;
-import Personnages.Guerrier;
-import Personnages.Magicien;
+import Personnages.*;
+import Tiles.PotionG;
+import Tiles.PotionM;
+import Tiles.Tile;
+
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Objects;
 
 public class DatabaseCRUD {
     private Connection mydb;
@@ -22,7 +26,7 @@ public class DatabaseCRUD {
             System.exit(1);
         }
     }
-
+    /*---------------------------Méthodes pour le player---------------------------*/
     public ArrayList<Characters> getHeroList()throws SQLException{
         ArrayList<Characters> heroList = new ArrayList<Characters>();
         Statement stmt = mydb.createStatement( );
@@ -60,6 +64,7 @@ public class DatabaseCRUD {
         pstmt.setInt(6,getIDFromDefensiveItem(hero.getDefGear()));
         pstmt.setInt(7,hero.getEmplacement());
         pstmt.executeUpdate();
+        createPlateau(hero);
     }
     public void updateHero(Characters hero) throws SQLException{
         PreparedStatement pstmt = mydb.prepareStatement("UPDATE hero SET hp=?,offensiveItemID=?,defensiveItemID=?,emplacement=? WHERE name=?");
@@ -100,13 +105,78 @@ public class DatabaseCRUD {
         }
     }
     public int getIDFromOffensiveItem(EquipementOffensif item){
-        if (item instanceof Epee) {return 5;}
-        else if (item instanceof BouleDeFeu) {return 6;}
-        else if (item instanceof Massue) {return 3;}
-        else if (item instanceof Eclair) {return 4;}
-        else if (item instanceof Arme) {return 1;}
-        else if (item instanceof Sort) {return 2;}
-        else{return 0;}
+        return switch (item) {
+            case Epee epee -> 5;
+            case BouleDeFeu bouleDeFeu -> 6;
+            case Massue massue -> 3;
+            case Eclair eclair -> 4;
+            case Arme arme -> 1;
+            case Sort sort -> 2;
+            case null, default -> 0;
+        };
+    }
+
+    /*---------------------------Méthodes pour le plateau---------------------------*/
+    public void createPlateau(Characters player)throws SQLException{
+        PreparedStatement pstmt= mydb.prepareStatement("INSERT INTO plateau (gobelin,sorcier,dragon,massue,epee,eclair,boule_de_feu,potion_m,potion_g,vide) VALUES (?,?,?,?,?,?,?,?,?,?)");
+        String[] tileList=getTileList(player.getPlateau());
+        for (int i = 0; i < 10; i++) {
+            pstmt.setString(i+1,tileList[i]);
+        }
+        pstmt.executeUpdate();
+    }
+    public ArrayList<Tile> getPlateau(Characters player) throws SQLException{
+        ArrayList<Tile> arrayList =new ArrayList<Tile>();
+        PreparedStatement pstmt= mydb.prepareStatement("SELECT * FROM (plateau INNER JOIN partie ON plateau.id=partie.plateau_id) INNER JOIN hero ON partie.hero_id=hero.id WHERE hero.name=?");
+        pstmt.setString(1,player.getName());
+        return arrayList;
+    }
+    public void updatePlateau(Characters player)throws SQLException{
+        PreparedStatement pstmt= mydb.prepareStatement("UPDATE INTO (plateau INNER JOIN partie ON plateau.id=partie.plateau_id) INNER JOIN hero ON partie.hero_id=hero.id SET gobelin=?,sorcier=?,dragon=?,massue=?,epee=?,eclair=?,boule_de_feu=?,potion_m=?,potion_g=?,vide=? WHERE hero.name=?");
+        String[] tileList=getTileList(player.getPlateau());
+        for (int i = 0; i < 10; i++) {
+            pstmt.setString(i+1,tileList[i]);
+        }
+        pstmt.setString(10, player.getName());
+        pstmt.executeUpdate();
+    }
+    public void deletePlateau(Characters player)throws SQLException{
+        PreparedStatement pstmt=mydb.prepareStatement("DELETE FROM (plateau INNER JOIN partie ON plateau.id=partie.plateau_id) INNER JOIN hero ON partie.hero_id=hero.id WHERE hero.name=?");
+        pstmt.setString(1,player.getName());
+        pstmt.executeUpdate();
+    }
+
+    public String[] getTileList(ArrayList<Tile> arrayList){
+        String [] rep = new String[10];
+        for (int i = 0; i < 10; i++) {
+            rep[i]="";
+        }
+        for (Tile cases : arrayList){
+            if (cases instanceof Enemy) {
+                if (((Enemy) cases).getName().equals("Gobelin")){
+                    rep[0]+=(" "+(cases).getId());
+                } else if (((Enemy) cases).getName().equals("Sorcier")) {
+                    rep[1]+=(" "+(cases).getId());
+                }else if (((Enemy) cases).getName().equals("Dragon")){
+                    rep[2]+=(" "+(cases).getId());
+                }
+            }else if (cases instanceof Massue){
+                rep[3]+=(" "+(cases).getId());
+            }else if (cases instanceof Epee){
+                rep[4]+=(" "+(cases).getId());
+            }else if (cases instanceof Eclair){
+                rep[5]+=(" "+(cases).getId());
+            }else if (cases instanceof BouleDeFeu){
+                rep[6]+=(" "+(cases).getId());
+            }else if (cases instanceof PotionM){
+                rep[7]+=(" "+(cases).getId());
+            }else if (cases instanceof PotionG){
+                rep[8]+=(" "+(cases).getId());
+            }else{
+                rep[9]+=(" "+(cases).getId());
+            }
+        }
+        return rep;
     }
 
 }

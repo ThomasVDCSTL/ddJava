@@ -4,6 +4,9 @@ import Defensif.EquipementDefensif;
 import Exceptions.FightOverByDeathOf;
 import Offensif.EquipementOffensif;
 import Tiles.Potion;
+import Tiles.Tile;
+
+import java.util.ArrayList;
 
 public abstract class Characters {
     /* Classe de personnage contenant les attributs nécessaires
@@ -21,7 +24,7 @@ public abstract class Characters {
     private EquipementOffensif atkGear;
     private EquipementDefensif defGear;
     private int emplacement;
-
+    private ArrayList<Tile> plateau;
 
 
     /*---------------------------Constructeur---------------------------*/
@@ -130,5 +133,13 @@ public abstract class Characters {
 
     public void setEmplacement(int emplacement) {
         this.emplacement = emplacement;
+    }
+
+    public ArrayList<Tile> getPlateau() {
+        return plateau;
+    }
+
+    public void setPlateau(ArrayList<Tile> plateau) {
+        this.plateau = plateau;
     }
 }

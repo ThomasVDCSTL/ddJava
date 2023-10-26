@@ -19,7 +19,7 @@ public class Main {
             menu.getStartMenu();
             System.out.println("Au revoir :)");
         }catch (SQLException e){
-            System.out.println("padchance");
+            System.out.println(e.getMessage());
         }
     }
 
