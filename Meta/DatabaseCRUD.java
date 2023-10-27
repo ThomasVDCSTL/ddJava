@@ -19,7 +19,7 @@ public class DatabaseCRUD {
         try {
             Driver myDriver = new com.mysql.jdbc.Driver();
             DriverManager.registerDriver(myDriver);
-            String URL = "jdbc:mysql://localhost:3306/mydb_java";
+            String URL = "jdbc:mysql://localhost:3306/mydb_java_8";
             this.mydb = DriverManager.getConnection(URL, "root", "root");
         } catch (SQLException e) {
             System.out.println("Error: unable to load driver class!");
@@ -118,12 +118,13 @@ public class DatabaseCRUD {
 
     /*---------------------------Méthodes pour le plateau---------------------------*/
     public void createPlateau(Characters player)throws SQLException{
-        PreparedStatement pstmt= mydb.prepareStatement("INSERT INTO plateau (gobelin,sorcier,dragon,massue,epee,eclair,boule_de_feu,potion_m,potion_g,vide) VALUES (?,?,?,?,?,?,?,?,?,?)");
+        PreparedStatement pstmt= mydb.prepareStatement("INSERT INTO plateau (gobelin,sorcier,dragon,massue,epee,eclair,boule_de_feu,potion_m,potion_g,vide) VALUES (?,?,?,?,?,?,?,?,?,?) UNION SELECT id FROM plateau WHERE vide=?");
         String[] tileList=getTileList(player.getPlateau());
         for (int i = 0; i < 10; i++) {
             pstmt.setString(i+1,tileList[i]);
         }
-        pstmt.executeUpdate();
+        pstmt.setString(10,tileList[9]);
+        ResultSet rs= pstmt.executeQuery();
     }
     public ArrayList<Tile> getPlateau(Characters player) throws SQLException{
         ArrayList<Tile> arrayList =new ArrayList<Tile>();
@@ -141,7 +142,7 @@ public class DatabaseCRUD {
         pstmt.executeUpdate();
     }
     public void deletePlateau(Characters player)throws SQLException{
-        PreparedStatement pstmt=mydb.prepareStatement("DELETE FROM (plateau INNER JOIN partie ON plateau.id=partie.plateau_id) INNER JOIN hero ON partie.hero_id=hero.id WHERE hero.name=?");
+        PreparedStatement pstmt=mydb.prepareStatement("DELETE partie,plateau FROM (plateau INNER JOIN partie ON plateau.id=partie.plateau_id) INNER JOIN hero ON partie.hero_id=hero.id WHERE hero.name=?");
         pstmt.setString(1,player.getName());
         pstmt.executeUpdate();
     }

@@ -256,7 +256,8 @@ public class Menu {
 
     public void setState(String state) {
         this.state = state;
-    }public void initPlateau(Characters joueur) {
+    }
+    public void initPlateau(Characters joueur) {
         ArrayList<Tile> plateau = new ArrayList<Tile>();
         for (int i = 1; i < 65; i++) {
             destin = new Random();
