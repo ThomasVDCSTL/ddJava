@@ -25,6 +25,8 @@ public abstract class Characters {
     private EquipementDefensif defGear;
     private int emplacement;
     private ArrayList<Tile> plateau;
+    private int hero_id;
+    private int plateau_id;
 
 
     /*---------------------------Constructeur---------------------------*/
@@ -141,5 +143,21 @@ public abstract class Characters {
 
     public void setPlateau(ArrayList<Tile> plateau) {
         this.plateau = plateau;
+    }
+
+    public int getHero_id() {
+        return hero_id;
+    }
+
+    public void setHero_id(int hero_id) {
+        this.hero_id = hero_id;
+    }
+
+    public int getPlateau_id() {
+        return plateau_id;
+    }
+
+    public void setPlateau_id(int plateau_id) {
+        this.plateau_id = plateau_id;
     }
 }

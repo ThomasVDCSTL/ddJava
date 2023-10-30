@@ -3,6 +3,7 @@ package Meta;
 import Defensif.*;
 import Offensif.*;
 import Personnages.*;
+import Tiles.EmptyTile;
 import Tiles.PotionG;
 import Tiles.PotionM;
 import Tiles.Tile;
@@ -30,32 +31,28 @@ public class DatabaseCRUD {
     public ArrayList<Characters> getHeroList()throws SQLException{
         ArrayList<Characters> heroList = new ArrayList<Characters>();
         Statement stmt = mydb.createStatement( );
-        ResultSet heroData=stmt.executeQuery("SELECT * FROM hero");
+        ResultSet heroData=stmt.executeQuery("SELECT * FROM hero JOIN partie ON hero.hero_id=partie.hero_id");
         while (heroData.next()){
             Characters myHero;
-            String heroName = heroData.getString("name");
-            String type = heroData.getString("type");
-            int hp = heroData.getInt("hp");
-            int attack = heroData.getInt("attack");
-            EquipementOffensif offensiveItem = getOffensiveItemFromID(heroData.getInt("offensiveItemID"));
-            EquipementDefensif defensiveItem = getDefensiveItemFromID(heroData.getInt("defensiveItemID"));
-            int emplacement=heroData.getInt("emplacement");
-            if (type.equals("guerrier")){
-                myHero =new Guerrier(heroName);
+            if (heroData.getString("hero.type").equals("guerrier")){
+                myHero =new Guerrier(heroData.getString("hero.name"));
             }else {
-                myHero = new Magicien(heroName);
+                myHero = new Magicien(heroData.getString("hero.name"));
             }
-            myHero.setAttack(attack);
-            myHero.setHp(hp);
-            myHero.setAtkGear(offensiveItem);
-            myHero.setDefGear(defensiveItem);
-            myHero.setEmplacement(emplacement);
+            myHero.setAttack(heroData.getInt("hero.attack"));
+            myHero.setHp(heroData.getInt("hero.hp"));
+            myHero.setAtkGear(getOffensiveItemFromID(heroData.getInt("hero.offensiveItemID")));
+            myHero.setDefGear(getDefensiveItemFromID(heroData.getInt("hero.defensiveItemID")));
+            myHero.setEmplacement(heroData.getInt("hero.emplacement"));
+            myHero.setHero_id(heroData.getInt("partie.hero_id"));
+            myHero.setPlateau_id(heroData.getInt("partie.plateau_id"));
+            myHero.setPlateau(getPlateau(myHero));
             heroList.add(myHero);
         }
         return heroList;
     }
     public void createHero(Characters hero)throws SQLException{
-        PreparedStatement pstmt= mydb.prepareStatement("INSERT INTO hero (name,type,hp,attack,offensiveItemID,defensiveItemID,emplacement) VALUES (?,?,?,?,?,?,?)");
+        PreparedStatement pstmt= mydb.prepareStatement("INSERT INTO hero (name,type,hp,attack,offensiveItemID,defensiveItemID,emplacement) VALUES (?,?,?,?,?,?,?)",Statement.RETURN_GENERATED_KEYS);
         pstmt.setString(1,hero.getName());
         pstmt.setString(2,hero.getType());
         pstmt.setInt(3,hero.getHp());
@@ -64,7 +61,15 @@ public class DatabaseCRUD {
         pstmt.setInt(6,getIDFromDefensiveItem(hero.getDefGear()));
         pstmt.setInt(7,hero.getEmplacement());
         pstmt.executeUpdate();
-        createPlateau(hero);
+        int plateau_id=createPlateau(hero);
+        int hero_id=0;
+        ResultSet rs = pstmt.getGeneratedKeys();
+        while (rs.next()){
+           hero_id= (int)rs.getLong(1);
+        }
+        hero.setHero_id(hero_id);
+        hero.setPlateau_id(plateau_id);
+        createPartie(hero);
     }
     public void updateHero(Characters hero) throws SQLException{
         PreparedStatement pstmt = mydb.prepareStatement("UPDATE hero SET hp=?,offensiveItemID=?,defensiveItemID=?,emplacement=? WHERE name=?");
@@ -74,6 +79,7 @@ public class DatabaseCRUD {
         pstmt.setInt(4,hero.getEmplacement());
         pstmt.setString(5, hero.getName());
         pstmt.executeUpdate();
+        updatePlateau(hero);
     }
     public void deleteHero(String name)throws SQLException{
         PreparedStatement pstmt=mydb.prepareStatement("DELETE FROM hero WHERE name=?");
@@ -117,34 +123,98 @@ public class DatabaseCRUD {
     }
 
     /*---------------------------Méthodes pour le plateau---------------------------*/
-    public void createPlateau(Characters player)throws SQLException{
-        PreparedStatement pstmt= mydb.prepareStatement("INSERT INTO plateau (gobelin,sorcier,dragon,massue,epee,eclair,boule_de_feu,potion_m,potion_g,vide) VALUES (?,?,?,?,?,?,?,?,?,?) UNION SELECT id FROM plateau WHERE vide=?");
+    public int createPlateau(Characters player)throws SQLException{
+        PreparedStatement pstmt= mydb.prepareStatement("INSERT INTO plateau (gobelin,sorcier,dragon,massue,epee,eclair,boule_de_feu,potion_m,potion_g,vide) VALUES (?,?,?,?,?,?,?,?,?,?) UNION SELECT id FROM plateau WHERE vide=?",Statement.RETURN_GENERATED_KEYS);
         String[] tileList=getTileList(player.getPlateau());
         for (int i = 0; i < 10; i++) {
             pstmt.setString(i+1,tileList[i]);
         }
         pstmt.setString(10,tileList[9]);
-        ResultSet rs= pstmt.executeQuery();
+        pstmt.executeUpdate();
+        ResultSet rs= pstmt.getGeneratedKeys();
+        int id=0;
+        while (rs.next()){
+            id = (int) rs.getLong(1);
+        }
+        return id;
     }
     public ArrayList<Tile> getPlateau(Characters player) throws SQLException{
-        ArrayList<Tile> arrayList =new ArrayList<Tile>();
-        PreparedStatement pstmt= mydb.prepareStatement("SELECT * FROM (plateau INNER JOIN partie ON plateau.id=partie.plateau_id) INNER JOIN hero ON partie.hero_id=hero.id WHERE hero.name=?");
-        pstmt.setString(1,player.getName());
-        return arrayList;
+        PreparedStatement pstmt= mydb.prepareStatement("SELECT * FROM plateau WHERE plateau_id=?");
+        pstmt.setInt(1,player.getPlateau_id());
+        ResultSet rs =pstmt.executeQuery();
+        String [] list =new String[10];
+        while (rs.next()){
+            list[0]= rs.getString("gobelin");
+            list[1]= rs.getString("sorcier");
+            list[2]= rs.getString("dragon");
+            list[3]= rs.getString("massue");
+            list[4]= rs.getString("epee");
+            list[5]= rs.getString("eclair");
+            list[6]= rs.getString("boule_de_feu");
+            list[7]= rs.getString("potion_m");
+            list[8]= rs.getString("potion_g");
+            list[9]= rs.getString("vide");
+        }
+        return getArrayList(list);
     }
     public void updatePlateau(Characters player)throws SQLException{
-        PreparedStatement pstmt= mydb.prepareStatement("UPDATE INTO (plateau INNER JOIN partie ON plateau.id=partie.plateau_id) INNER JOIN hero ON partie.hero_id=hero.id SET gobelin=?,sorcier=?,dragon=?,massue=?,epee=?,eclair=?,boule_de_feu=?,potion_m=?,potion_g=?,vide=? WHERE hero.name=?");
+        PreparedStatement pstmt= mydb.prepareStatement("UPDATE INTO plateau SET gobelin=?,sorcier=?,dragon=?,massue=?,epee=?,eclair=?,boule_de_feu=?,potion_m=?,potion_g=?,vide=? WHERE plateau_id=?");
         String[] tileList=getTileList(player.getPlateau());
         for (int i = 0; i < 10; i++) {
             pstmt.setString(i+1,tileList[i]);
         }
-        pstmt.setString(10, player.getName());
+        pstmt.setInt(11, player.getPlateau_id());
         pstmt.executeUpdate();
     }
     public void deletePlateau(Characters player)throws SQLException{
-        PreparedStatement pstmt=mydb.prepareStatement("DELETE partie,plateau FROM (plateau INNER JOIN partie ON plateau.id=partie.plateau_id) INNER JOIN hero ON partie.hero_id=hero.id WHERE hero.name=?");
-        pstmt.setString(1,player.getName());
+        PreparedStatement pstmt=mydb.prepareStatement("DELETE FROM plateau WHERE plateau_id=?");
+        pstmt.setInt(1,player.getPlateau_id());
         pstmt.executeUpdate();
+    }
+    public ArrayList<Tile> getArrayList(String[] enemyList){
+        ArrayList<Tile> al = new ArrayList<Tile>();
+        int[] gobelins = toIntArray(enemyList[0].split(" "));
+        int[] sorciers = toIntArray(enemyList[1].split(" "));
+        int[] dragons = toIntArray(enemyList[2].split(" "));
+        int[] massues = toIntArray(enemyList[3].split(" "));
+        int[] epees = toIntArray(enemyList[4].split(" "));
+        int[] eclairs = toIntArray(enemyList[5].split(" "));
+        int[] boules = toIntArray(enemyList[6].split(" "));
+        int[] potionsM = toIntArray(enemyList[7].split(" "));
+        int[] potionsG = toIntArray(enemyList[8].split(" "));
+        int[] vides = toIntArray(enemyList[9].split(" "));
+        for (int i = 0; i < 64; i++) {
+            if (gobelins[0]==i){
+                al.add(new Enemy("Gobelin", 6, 1, i));
+            }else if (sorciers[0]==i){
+                al.add(new Enemy("Sorcier", 9, 2, i));
+            }else if (dragons[0]==i){
+                al.add(new Enemy("Dragon", 15, 4, i));
+            }else if (massues[0]==i){
+                al.add(new Massue(i));
+            }else if (epees[0]==i){
+                al.add(new Epee(i));
+            }else if (eclairs[0]==i){
+                al.add(new Eclair(i));
+            }else if (boules[0]==i){
+                al.add(new BouleDeFeu(i));
+            }else if (potionsM[0]==i){
+                al.add(new PotionM(i));
+            }else if (potionsG[0]==i){
+                al.add(new PotionG(i));
+            }else if (vides[0]==i) {
+                al.add(new EmptyTile(i));
+            }
+        }
+        return al;
+    }
+
+    public int[] toIntArray(String[] s){
+        int[] result = new int[s.length];
+        for (int i = 1; i < s.length; i++) {
+            result[i] = Integer.parseInt(s[i]);
+        }
+        return result;
     }
 
     public String[] getTileList(ArrayList<Tile> arrayList){
@@ -178,6 +248,19 @@ public class DatabaseCRUD {
             }
         }
         return rep;
+    }
+    /*---------------------------Méthodes pour la partie---------------------------*/
+    public void createPartie(Characters player) throws SQLException {
+        PreparedStatement pstmt=mydb.prepareStatement("INSERT INTO partie (hero_id,plateau_id) VALUES (?,?)");
+        pstmt.setInt(1,player.getHero_id());
+        pstmt.setInt(2,player.getPlateau_id());
+        pstmt.executeUpdate();
+    }
+    public void deletePartie(Characters player)throws SQLException{
+        PreparedStatement pstmt =mydb.prepareStatement("DELETE FROM partie WHERE plateau_id = ?");
+        pstmt.setInt(1, player.getPlateau_id());
+        pstmt.executeUpdate();
+        deletePlateau(player);
     }
 
 }
