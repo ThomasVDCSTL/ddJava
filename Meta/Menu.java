@@ -1,5 +1,6 @@
 package Meta;
 
+import Database.*;
 import Exceptions.LeavingGame;
 import Offensif.BouleDeFeu;
 import Offensif.Eclair;
@@ -13,7 +14,6 @@ import Tiles.EmptyTile;
 import Tiles.PotionG;
 import Tiles.PotionM;
 import Tiles.Tile;
-import com.mysql.cj.Query;
 
 import java.sql.*;
 import java.util.Random;
@@ -114,7 +114,7 @@ public class Menu {
                         myGame.playGame();
                     } catch (LeavingGame e) {
                         System.out.println("Vous quittez la partie");
-                        mydb.updateHero(actualHero);
+                        HeroCRUD.getInstance().updateHero(actualHero);
                     }
                 }
             }
@@ -138,7 +138,7 @@ public class Menu {
 //        return this.players;
 //    }
     public void selectHero()throws SQLException{
-        ArrayList<Characters> heroes= mydb.getHeroList();
+        ArrayList<Characters> heroes= HeroCRUD.getInstance().getHeroList();
         displayHeros(heroes);
         int choix=0;
         while (choix<1||choix>heroes.size()) {
@@ -149,11 +149,11 @@ public class Menu {
         actualHero= heroes.get(choix-1);
     }
     public void deleteHero()throws SQLException{
-        ArrayList<Characters> heroes= mydb.getHeroList();
+        ArrayList<Characters> heroes= HeroCRUD.getInstance().getHeroList();
         displayHeros(heroes);
         System.out.println("Quel personnage voulez vous supprimer ? [Nom du personnage]");
         String choix = initGame.next();
-        mydb.deleteHero(choix);
+        HeroCRUD.deleteHero(choix);
     }
     public void createCharacter()throws SQLException{
         String classe ="";
@@ -174,7 +174,7 @@ public class Menu {
             personnage = new Magicien(nom);
         }
         initPlateau(personnage);
-        mydb.createHero(personnage);
+        HeroCRUD.getInstance().createHero(personnage);
         actualHero=personnage;
         System.out.println("Personnage créé et séléctionné");
     }

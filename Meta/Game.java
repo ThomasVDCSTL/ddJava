@@ -14,10 +14,8 @@ import java.util.Scanner;
 import java.util.Random;
 
 /**
- * blabla
- *
- *
- *
+ * Classe contenant un joueur en attribut
+ * et toutes les méthodes relatives au déroulement du jeu
  */
 public class Game {
 
@@ -38,6 +36,11 @@ public class Game {
     /*---------------------------Méthodes---------------------------*/
 
 
+    /**
+     * méthode contenant la boucle qui joue un tour par un tour jusqu'à ce que le joueur soit mort ou sorti
+     * @return un messsage dépendant du résultat
+     * @throws LeavingGame exception qui nous fait retourner au menu principal
+     */
     public String playGame() throws LeavingGame {
         Scanner jeu = new Scanner(System.in);
         while (joueur.getEmplacement() < 64 && joueur.getHp() > 0) {
@@ -70,6 +73,11 @@ public class Game {
             System.out.println(this.inspect(player));
         }
     }
+    /**
+     * méthode qui va appeler la fonction interaction de la case sur laquelle se trouve le joueur
+     * @param player notre joueur, afin de récupérer sa position
+     * @return un string différent selon si la partie doit s'arréter ou non
+     */
     public String inspect(Characters player){
         if (joueur.getEmplacement() < 64 && joueur.getEmplacement() >= 0) {
             try {
@@ -86,18 +94,31 @@ public class Game {
         }
         return "L'aventure s'arrête ici";
     }
+
+    /**
+     * méthode qui va jeter le dé puis appeler la méthode de déplacement
+     */
     public void startTurn(){
         destin = new Random();
         int dice = destin.ints(1, 7).findFirst().getAsInt();
         this.deplacement(dice);
         System.out.println("Position joueur : " + joueur.getEmplacement());
     }
+
+    /**
+     *  méthode qui va faire avancer le joueur du nombre tiré par le dé
+     * @param jet le résultat du jet de dé
+     */
     public void deplacement(int jet) {
         joueur.setEmplacement(joueur.getEmplacement()+jet);
     }
 
 
-
+    /**
+     * méthode pour afficher un message au moment de quitter la partie
+     * @param jeu Scanner
+     * @return un string différent si on est mort ou si on a fini
+     */
     public String getEndingMessage(Scanner jeu){
         if (joueur.getEmplacement() < 64) {
             System.out.print("T'as perdu gros bouffon !");

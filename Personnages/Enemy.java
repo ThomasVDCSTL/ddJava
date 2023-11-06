@@ -43,6 +43,11 @@ public class Enemy extends Characters implements Tile {
             throw new ReculDeNcases(recul);
         }
     }
+    public void getsHit(Characters opponent){
+        this.setHp(this.getHp()-opponent.getAttack());
+        System.out.println(opponent.getName()+" attaque "+this.getName()+" pour "+opponent.getAttack());
+        System.out.println(this.getName()+"'s HP : "+this.getHp());
+    }
      public void startFight(Characters player)throws FightOverByFlee,FightOverByDeathOf{
 
         boolean playerTurn =true;

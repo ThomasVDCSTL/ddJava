@@ -38,9 +38,9 @@ public abstract class Characters {
 
     /*---------------------------Méthodes---------------------------*/
 
-    public void getsHit(Characters opponent){
-        this.hp-=(opponent.getAttack());
-        System.out.println(opponent.getName()+" attaque "+this.getName()+" pour "+opponent.getAttack());
+    public void getsHit(Characters opponent) {
+        this.setHp(this.getHp()-(opponent.getAttack()-this.getDefGear().getValue()));
+        System.out.println(opponent.getName()+" vous attaque attaque pour "+opponent.getAttack());
         System.out.println(this.getName()+"'s HP : "+this.getHp());
     }
 
